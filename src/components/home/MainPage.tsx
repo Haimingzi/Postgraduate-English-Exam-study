@@ -5,9 +5,15 @@ import { ReadingArea } from "@/components/reading/ReadingArea";
 import { ReadingSkeleton } from "@/components/reading/ReadingSkeleton";
 import { OptionSheet } from "@/components/reading/OptionSheet";
 import { ExplanationCard } from "@/components/reading/ExplanationCard";
+import { WordDetailModal } from "@/components/reading/WordDetailModal";
+import { HistoryList } from "@/components/history/HistoryList";
 import { generateClozeTest } from "@/app/actions/generateClozeTest";
-import type { ClozeOptionsPerBlank } from "@/types/generate";
+import { getWordDetail } from "@/app/actions/getWordDetail";
+import { saveHistory } from "@/types/history";
+import type { ClozeOptionsPerBlank, ClozeOptionsDetailPerBlank } from "@/types/generate";
 import type { AnswerStatus } from "@/components/reading/ReadingArea";
+import type { WordDetail } from "@/components/reading/WordDetailModal";
+import type { HistoryRecord } from "@/types/history";
 
 const DEFAULT_OPTIONS: ClozeOptionsPerBlank = {
   1: ["words", "ideas", "books", "skills"],
@@ -27,11 +33,16 @@ export function MainPage() {
   const [wordList, setWordList] = useState("");
   const [article, setArticle] = useState("");
   const [optionsFromServer, setOptionsFromServer] = useState<ClozeOptionsPerBlank | null>(null);
+  const [optionsDetailFromServer, setOptionsDetailFromServer] = useState<ClozeOptionsDetailPerBlank | null>(null);
   const [selectedBlank, setSelectedBlank] = useState<number | null>(null);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [explanationBlank, setExplanationBlank] = useState<number | null>(null);
   const [generating, setGenerating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [selectedWord, setSelectedWord] = useState<string | null>(null);
+  const [wordDetail, setWordDetail] = useState<WordDetail | null>(null);
+  const [loadingWordDetail, setLoadingWordDetail] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   const opts = optionsFromServer ?? DEFAULT_OPTIONS;
   const highlightWords = useMemo(() => parseWordList(wordList), [wordList]);
@@ -61,10 +72,22 @@ export function MainPage() {
       if (result.success) {
         setArticle(result.article);
         setOptionsFromServer(result.options);
+        setOptionsDetailFromServer(result.optionsDetail ?? null);
         setAnswers({});
+        
+        // Save to history
+        saveHistory({
+          wordList,
+          article: result.article,
+          options: result.options,
+          optionsDetail: result.optionsDetail,
+        });
       } else {
-        setErrorMessage(result.error);
+        setErrorMessage(result.error || "生成失败，请稍后重试。");
       }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "生成失败，请稍后重试。";
+      setErrorMessage(message);
     } finally {
       setGenerating(false);
     }
@@ -81,16 +104,50 @@ export function MainPage() {
     (blankIndex: number, _key: "A" | "B" | "C" | "D", optionText: string) => {
       setAnswers((prev: Record<number, string>) => ({ ...prev, [blankIndex]: optionText }));
       setExplanationBlank(blankIndex);
-      setSelectedBlank(null);
+      // Keep the option sheet open to show details after selection
+      // User can close it by clicking outside
     },
     []
   );
 
+  const handleWordClick = useCallback(async (word: string) => {
+    setSelectedWord(word);
+    setWordDetail(null);
+    setLoadingWordDetail(true);
+    try {
+      const detail = await getWordDetail(word);
+      setWordDetail(detail);
+    } catch (err) {
+      setWordDetail(null);
+    } finally {
+      setLoadingWordDetail(false);
+    }
+  }, []);
+
+  const handleHistorySelect = useCallback((record: HistoryRecord) => {
+    setWordList(record.wordList);
+    setArticle(record.article);
+    setOptionsFromServer(record.options);
+    setOptionsDetailFromServer(record.optionsDetail ?? null);
+    setAnswers(record.answers ?? {});
+    setErrorMessage("");
+  }, []);
+
   return (
     <div className="min-h-screen bg-white min-h-[100dvh] flex flex-col">
       <header className="border-b border-gray-100 bg-white flex-shrink-0 safe-area-top">
-        <div className="mx-auto max-w-2xl w-full px-4 py-3 sm:py-4">
+        <div className="mx-auto max-w-2xl w-full px-4 py-3 sm:py-4 flex items-center justify-between">
           <h1 className="text-xl font-semibold text-gray-900">考研完形填空 (Cloze Test)</h1>
+          <button
+            type="button"
+            onClick={() => setShowHistory(true)}
+            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+            aria-label="历史记录"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
         </div>
       </header>
 
@@ -142,6 +199,7 @@ export function MainPage() {
               <ReadingArea
                 content={article}
                 onBlankClick={setSelectedBlank}
+                onWordClick={handleWordClick}
                 selectedAnswers={answers}
                 answerStatus={answerStatus}
                 highlightWords={highlightWords}
@@ -153,6 +211,7 @@ export function MainPage() {
                 userAnswer={answers[explanationBlank]!}
                 correctAnswer={getCorrectAnswer(explanationBlank)}
                 isCorrect={answerStatus[explanationBlank] === "correct"}
+                optionsDetail={optionsDetailFromServer?.[explanationBlank]}
                 onDismiss={() => setExplanationBlank(null)}
               />
             )}
@@ -164,8 +223,24 @@ export function MainPage() {
         open={selectedBlank != null}
         blankIndex={selectedBlank}
         options={selectedBlank != null ? getOptionsForBlank(selectedBlank) : ["", "", "", ""]}
+        optionsDetail={selectedBlank != null ? optionsDetailFromServer?.[selectedBlank] : undefined}
+        selectedAnswer={selectedBlank != null ? answers[selectedBlank] : undefined}
+        correctAnswer={selectedBlank != null ? getCorrectAnswer(selectedBlank) : undefined}
         onSelect={handleSelectOption}
         onClose={() => setSelectedBlank(null)}
+      />
+
+      <WordDetailModal
+        word={selectedWord}
+        detail={wordDetail}
+        loading={loadingWordDetail}
+        onClose={() => setSelectedWord(null)}
+      />
+
+      <HistoryList
+        open={showHistory}
+        onSelect={handleHistorySelect}
+        onClose={() => setShowHistory(false)}
       />
     </div>
   );

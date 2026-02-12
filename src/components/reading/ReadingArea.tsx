@@ -7,6 +7,7 @@ export type AnswerStatus = "correct" | "wrong";
 export interface ReadingAreaProps {
   content: string;
   onBlankClick: (blankIndex: number) => void;
+  onWordClick?: (word: string) => void;
   selectedAnswers?: Record<number, string>;
   answerStatus?: Record<number, AnswerStatus>;
   highlightWords?: string[];
@@ -16,6 +17,7 @@ export interface ReadingAreaProps {
 export function ReadingArea({
   content,
   onBlankClick,
+  onWordClick,
   selectedAnswers = {},
   answerStatus = {},
   highlightWords = [],
@@ -42,7 +44,7 @@ export function ReadingArea({
     <div className={"font-serif text-lg leading-relaxed text-gray-800 selection:bg-amber-100 " + className}>
       {parts.map((part, i) =>
         part.type === "text" ? (
-          <HighlightedText key={i} text={part.value} highlightWords={highlightWords} />
+          <HighlightedText key={i} text={part.value} highlightWords={highlightWords} onWordClick={onWordClick} />
         ) : (
           <BlankBadge
             key={i}
@@ -58,27 +60,65 @@ export function ReadingArea({
   );
 }
 
-function HighlightedText({ text, highlightWords }: { text: string; highlightWords: string[] }) {
-  if (highlightWords.length === 0) return <span>{text}</span>;
-  const escaped = highlightWords
-    .filter((w) => w.length > 0)
-    .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-    .join("|");
-  if (!escaped) return <span>{text}</span>;
-  const regex = new RegExp("\\b(" + escaped + ")\\b", "gi");
+function HighlightedText({
+  text,
+  highlightWords,
+  onWordClick,
+}: {
+  text: string;
+  highlightWords: string[];
+  onWordClick?: (word: string) => void;
+}) {
+  // Split text into words and punctuation
+  const wordRegex = /\b[\w'-]+\b/g;
   const nodes: React.ReactNode[] = [];
-  let lastEnd = 0;
-  let m: RegExpExecArray | null;
-  while ((m = regex.exec(text)) !== null) {
-    if (m.index > lastEnd) nodes.push(text.slice(lastEnd, m.index));
-    nodes.push(
-      <mark key={m.index} className="font-semibold bg-amber-200/80 rounded px-0.5">
-        {m[1]}
-      </mark>
-    );
-    lastEnd = regex.lastIndex;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = wordRegex.exec(text)) !== null) {
+    // Add text before the word
+    if (match.index > lastIndex) {
+      nodes.push(text.slice(lastIndex, match.index));
+    }
+
+    const word = match[0];
+    const isHighlighted = highlightWords.some((hw) => hw.toLowerCase() === word.toLowerCase());
+
+    if (onWordClick) {
+      // Make all words clickable
+      nodes.push(
+        <button
+          key={match.index}
+          type="button"
+          onClick={() => onWordClick(word)}
+          className={`hover:bg-blue-100 hover:underline cursor-pointer rounded px-0.5 transition-colors ${
+            isHighlighted ? "font-semibold bg-amber-200/80" : ""
+          }`}
+        >
+          {word}
+        </button>
+      );
+    } else {
+      // Original highlighting behavior
+      if (isHighlighted) {
+        nodes.push(
+          <mark key={match.index} className="font-semibold bg-amber-200/80 rounded px-0.5">
+            {word}
+          </mark>
+        );
+      } else {
+        nodes.push(word);
+      }
+    }
+
+    lastIndex = wordRegex.lastIndex;
   }
-  if (lastEnd < text.length) nodes.push(text.slice(lastEnd));
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    nodes.push(text.slice(lastIndex));
+  }
+
   return <span>{nodes}</span>;
 }
 

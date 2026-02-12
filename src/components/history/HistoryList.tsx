@@ -11,12 +11,14 @@ export interface HistoryListProps {
 }
 
 export function HistoryList({ open, onSelect, onClose }: HistoryListProps) {
-  if (!open) return null;
+  // All Hooks must be declared at the top level, before any conditional returns
   const [history, setHistory] = useState<HistoryRecord[]>([]);
 
   useEffect(() => {
-    setHistory(getHistory());
-  }, []);
+    if (open) {
+      setHistory(getHistory());
+    }
+  }, [open]);
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -43,6 +45,9 @@ export function HistoryList({ open, onSelect, onClose }: HistoryListProps) {
       minute: "2-digit",
     });
   };
+
+  // Conditional rendering is handled in the return statement, not before Hooks
+  if (!open) return null;
 
   return (
     <>

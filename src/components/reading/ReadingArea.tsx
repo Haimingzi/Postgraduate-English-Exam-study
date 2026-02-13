@@ -4,6 +4,11 @@ const PLACEHOLDER_REGEX = /\{\{(\d+)\}\}/g;
 
 export type AnswerStatus = "correct" | "wrong";
 
+export interface WordAnnotation {
+  word: string;
+  meaning: string;
+}
+
 export interface ReadingAreaProps {
   content: string;
   onBlankClick: (blankIndex: number) => void;
@@ -12,6 +17,7 @@ export interface ReadingAreaProps {
   correctAnswers?: Record<number, string>;
   answerStatus?: Record<number, AnswerStatus>;
   highlightWords?: string[];
+  annotations?: WordAnnotation[];
   className?: string;
 }
 
@@ -23,6 +29,7 @@ export function ReadingArea({
   correctAnswers = {},
   answerStatus = {},
   highlightWords = [],
+  annotations = [],
   className = "",
 }: ReadingAreaProps) {
   if (!content.trim()) return null;
@@ -46,7 +53,7 @@ export function ReadingArea({
     <div className={"font-serif text-lg leading-relaxed text-gray-800 selection:bg-amber-100 " + className}>
       {parts.map((part, i) =>
         part.type === "text" ? (
-          <HighlightedText key={i} text={part.value} highlightWords={highlightWords} onWordClick={onWordClick} />
+          <HighlightedText key={i} text={part.value} highlightWords={highlightWords} annotations={annotations} onWordClick={onWordClick} />
         ) : (
           <BlankBadge
             key={i}
@@ -67,12 +74,20 @@ export function ReadingArea({
 function HighlightedText({
   text,
   highlightWords,
+  annotations,
   onWordClick,
 }: {
   text: string;
   highlightWords: string[];
+  annotations: WordAnnotation[];
   onWordClick?: (word: string) => void;
 }) {
+  // Create a map for quick annotation lookup
+  const annotationMap = new Map<string, string>();
+  annotations.forEach(ann => {
+    annotationMap.set(ann.word.toLowerCase(), ann.meaning);
+  });
+
   // Split text into words and punctuation
   const wordRegex = /\b[\w'-]+\b/g;
   const nodes: React.ReactNode[] = [];
@@ -87,6 +102,7 @@ function HighlightedText({
 
     const word = match[0];
     const isHighlighted = highlightWords.some((hw) => hw.toLowerCase() === word.toLowerCase());
+    const annotation = annotationMap.get(word.toLowerCase());
 
     if (onWordClick) {
       // Make all words clickable
@@ -102,6 +118,14 @@ function HighlightedText({
           {word}
         </button>
       );
+      // Add annotation if present
+      if (annotation) {
+        nodes.push(
+          <span key={`${match.index}-ann`} className="text-gray-500 text-sm ml-1">
+            ({annotation})
+          </span>
+        );
+      }
     } else {
       // Original highlighting behavior
       if (isHighlighted) {
@@ -112,6 +136,14 @@ function HighlightedText({
         );
       } else {
         nodes.push(word);
+      }
+      // Add annotation if present
+      if (annotation) {
+        nodes.push(
+          <span key={`${match.index}-ann`} className="text-gray-500 text-sm ml-1">
+            ({annotation})
+          </span>
+        );
       }
     }
 

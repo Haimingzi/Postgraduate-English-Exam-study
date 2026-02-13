@@ -1,6 +1,6 @@
 "use server";
 
-import type { GenerateClozeResult, GenerateClozeJson, OptionDetail } from "@/types/generate";
+import type { GenerateClozeResult, GenerateClozeJson, OptionDetail, WordAnnotation } from "@/types/generate";
 
 // DeepSeek OpenAI-compatible chat completions endpoint
 const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
@@ -15,6 +15,13 @@ VOCABULARY REQUIREMENTS - EXTREMELY IMPORTANT:
 - The vocabulary should be challenging but recognizable to students preparing for 考研
 - Avoid rare, archaic, or highly specialized technical terms
 - Use vocabulary that is practical and frequently appears in academic contexts
+
+ANNOTATION REQUIREMENT - IMPORTANT:
+- If you must use any words that are NOT in the 考研 vocabulary list (beyond the 5,500 words), you MUST list them in the "annotations" array
+- For each non-考研 word, provide: {"word": "theWord", "meaning": "中文释义"}
+- Only annotate content words (nouns, verbs, adjectives, adverbs) that exceed 考研 level
+- Do NOT annotate: common words, function words, proper nouns, or words within the 考研 syllabus
+- Keep annotations minimal - ideally the article should use only 考研-level vocabulary
 
 Your task is to create a cloze test that matches the actual difficulty of 考研英语 (Postgraduate Entrance Exam English).
 
@@ -36,7 +43,11 @@ Format:
       {"word": "wrong3", "meaning": "中文释义", "phonetic": "/音标/", "partOfSpeech": "词性"}
     ],
     ...
-  }
+  },
+  "annotations": [
+    {"word": "nonKaoyanWord1", "meaning": "中文释义"},
+    {"word": "nonKaoyanWord2", "meaning": "中文释义"}
+  ]
 }
 
 CRITICAL REQUIREMENTS:
@@ -66,6 +77,11 @@ CRITICAL REQUIREMENTS:
      - "partOfSpeech": part of speech in Chinese (e.g., "名词", "动词", "形容词", "副词", etc.)
    - All 4 options for each blank must have complete detail information including part of speech
 
+5. Annotations:
+   - List any words in the article that exceed 考研 vocabulary level
+   - Provide Chinese meaning for each annotated word
+   - These words will be displayed with their meanings in parentheses to help students
+
 Article rules:
 - The text should be a complete mini story or exposition, NOT a list of independent sentences.
 - Distribute blanks across the whole article: avoid putting many blanks in the same sentence or next to each other.
@@ -82,6 +98,7 @@ JSON rules:
 - "article" uses {{1}}, {{2}}, {{3}}, ... in order.
 - "options" keys are string numbers "1", "2", ...; each value is exactly 4 strings (correct first, then 3 wrong options).
 - "optionsDetail" keys match "options" keys; each value is exactly 4 objects with "word", "meaning", "phonetic", and "partOfSpeech" fields.
+- "annotations" is an optional array of {"word": "...", "meaning": "..."} objects for non-考研 words.
 - Output ONLY valid JSON, no comments, no trailing commas, no markdown formatting.
 - The response must be parseable by JSON.parse() directly.
 
@@ -89,7 +106,8 @@ Example valid output format (start with {, end with }):
 {
   "article": "...",
   "options": {"1": ["word1", "word2", "word3", "word4"]},
-  "optionsDetail": {"1": [{"word": "word1", "meaning": "意思", "phonetic": "/wɜːd/"}]}
+  "optionsDetail": {"1": [{"word": "word1", "meaning": "意思", "phonetic": "/wɜːd/", "partOfSpeech": "名词"}]},
+  "annotations": [{"word": "sophisticated", "meaning": "复杂的；精密的"}]
 }`;
 
 function buildUserPrompt(words: string): string {
@@ -242,7 +260,27 @@ function parseAndValidate(jsonText: string): GenerateClozeJson {
     }
   }
 
-  return { article: article.trim(), options: optionsOut, optionsDetail: optionsDetailOut };
+  // Parse annotations if present
+  let annotationsOut: WordAnnotation[] | undefined;
+  if ("annotations" in obj && obj.annotations) {
+    const annotations = obj.annotations;
+    if (Array.isArray(annotations)) {
+      annotationsOut = [];
+      for (const item of annotations) {
+        if (typeof item === "object" && item !== null && "word" in item && "meaning" in item) {
+          annotationsOut.push({
+            word: String(item.word),
+            meaning: String(item.meaning),
+          });
+        }
+      }
+      if (annotationsOut.length === 0) {
+        annotationsOut = undefined;
+      }
+    }
+  }
+
+  return { article: article.trim(), options: optionsOut, optionsDetail: optionsDetailOut, annotations: annotationsOut };
 }
 
 function toResultOptions(
@@ -272,12 +310,13 @@ export async function generateClozeTest(words: string): Promise<GenerateClozeRes
   try {
     const userPrompt = buildUserPrompt(words);
     const jsonText = await callDeepSeek(userPrompt);
-    const { article, options, optionsDetail } = parseAndValidate(jsonText);
+    const { article, options, optionsDetail, annotations } = parseAndValidate(jsonText);
     return {
       success: true,
       article,
       options: toResultOptions(options),
       optionsDetail: toResultOptionsDetail(optionsDetail),
+      annotations,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : "生成失败，请稍后重试。";

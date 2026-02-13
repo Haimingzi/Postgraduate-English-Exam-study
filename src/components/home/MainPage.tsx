@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { ReadingArea } from "@/components/reading/ReadingArea";
+import type { WordAnnotation } from "@/components/reading/ReadingArea";
 import { ReadingSkeleton } from "@/components/reading/ReadingSkeleton";
 import { OptionSheet } from "@/components/reading/OptionSheet";
 import { ExplanationCard } from "@/components/reading/ExplanationCard";
@@ -34,6 +35,7 @@ export function MainPage() {
   const [article, setArticle] = useState("");
   const [optionsFromServer, setOptionsFromServer] = useState<ClozeOptionsPerBlank | null>(null);
   const [optionsDetailFromServer, setOptionsDetailFromServer] = useState<ClozeOptionsDetailPerBlank | null>(null);
+  const [annotations, setAnnotations] = useState<WordAnnotation[]>([]);
   const [selectedBlank, setSelectedBlank] = useState<number | null>(null);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [explanationBlank, setExplanationBlank] = useState<number | null>(null);
@@ -82,6 +84,7 @@ export function MainPage() {
         setArticle(result.article);
         setOptionsFromServer(result.options);
         setOptionsDetailFromServer(result.optionsDetail ?? null);
+        setAnnotations(result.annotations ?? []);
         setAnswers({});
         
         // Save to history
@@ -90,6 +93,7 @@ export function MainPage() {
           article: result.article,
           options: result.options,
           optionsDetail: result.optionsDetail,
+          annotations: result.annotations,
         });
       } else {
         setErrorMessage(result.error || "生成失败，请稍后重试。");
@@ -138,6 +142,7 @@ export function MainPage() {
     setArticle(record.article);
     setOptionsFromServer(record.options);
     setOptionsDetailFromServer(record.optionsDetail ?? null);
+    setAnnotations(record.annotations ?? []);
     setAnswers(record.answers ?? {});
     setErrorMessage("");
   }, []);
@@ -213,6 +218,7 @@ export function MainPage() {
                 correctAnswers={correctAnswers}
                 answerStatus={answerStatus}
                 highlightWords={highlightWords}
+                annotations={annotations}
               />
             </div>
             {explanationBlank != null && answers[explanationBlank] != null && (

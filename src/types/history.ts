@@ -1,4 +1,4 @@
-import type { ClozeOptionsPerBlank, ClozeOptionsDetailPerBlank } from "./generate";
+import type { ClozeOptionsPerBlank, ClozeOptionsDetailPerBlank, WordAnnotation } from "./generate";
 
 export interface HistoryRecord {
   id: string;
@@ -7,6 +7,7 @@ export interface HistoryRecord {
   article: string;
   options: ClozeOptionsPerBlank;
   optionsDetail?: ClozeOptionsDetailPerBlank;
+  annotations?: WordAnnotation[];
   answers?: Record<number, string>;
 }
 
@@ -67,5 +68,3 @@ export function clearHistory(): void {
     console.error("Failed to clear history:", err);
   }
 }
-
-

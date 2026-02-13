@@ -23,6 +23,34 @@ const DEFAULT_OPTIONS: ClozeOptionsPerBlank = {
   4: ["vocabulary", "memory", "habits", "goals"],
 };
 
+const WORD_CACHE_KEY = "word_detail_cache";
+
+// 从 localStorage 获取缓存
+function getCachedWordDetail(word: string): WordDetail | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const cache = localStorage.getItem(WORD_CACHE_KEY);
+    if (!cache) return null;
+    const parsed = JSON.parse(cache) as Record<string, WordDetail>;
+    return parsed[word.toLowerCase()] || null;
+  } catch {
+    return null;
+  }
+}
+
+// 保存到 localStorage 缓存
+function setCachedWordDetail(word: string, detail: WordDetail): void {
+  if (typeof window === "undefined") return;
+  try {
+    const cache = localStorage.getItem(WORD_CACHE_KEY);
+    const parsed = cache ? (JSON.parse(cache) as Record<string, WordDetail>) : {};
+    parsed[word.toLowerCase()] = detail;
+    localStorage.setItem(WORD_CACHE_KEY, JSON.stringify(parsed));
+  } catch (err) {
+    console.error("Failed to cache word detail:", err);
+  }
+}
+
 function parseWordList(words: string): string[] {
   return words
     .split(/[\n,，\s]+/)
@@ -127,9 +155,25 @@ export function MainPage() {
     setSelectedWord(word);
     setWordDetail(null);
     setLoadingWordDetail(true);
+    
     try {
+      // 1. 先查本地缓存
+      const cached = getCachedWordDetail(word);
+      if (cached) {
+        setWordDetail(cached);
+        setLoadingWordDetail(false);
+        return;
+      }
+
+      // 2. 缓存未命中，调用 API
       const detail = await getWordDetail(word);
-      setWordDetail(detail);
+      if (detail) {
+        // 3. 保存到缓存
+        setCachedWordDetail(word, detail);
+        setWordDetail(detail);
+      } else {
+        setWordDetail(null);
+      }
     } catch (err) {
       setWordDetail(null);
     } finally {

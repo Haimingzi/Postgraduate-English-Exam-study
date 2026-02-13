@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { ReadingArea } from "@/components/reading/ReadingArea";
 import type { WordAnnotation } from "@/components/reading/ReadingArea";
 import { ReadingSkeleton } from "@/components/reading/ReadingSkeleton";
@@ -8,13 +8,17 @@ import { OptionSheet } from "@/components/reading/OptionSheet";
 import { ExplanationCard } from "@/components/reading/ExplanationCard";
 import { WordDetailModal } from "@/components/reading/WordDetailModal";
 import { HistoryList } from "@/components/history/HistoryList";
+import { AuthModal } from "@/components/auth/AuthModal";
 import { generateClozeTest } from "@/app/actions/generateClozeTest";
 import { getWordDetail } from "@/app/actions/getWordDetail";
 import { saveHistory } from "@/types/history";
+import { getWordCacheFromCloud, saveWordCacheToCloud } from "@/lib/wordCache";
+import { supabase } from "@/lib/supabase";
 import type { ClozeOptionsPerBlank, ClozeOptionsDetailPerBlank } from "@/types/generate";
 import type { AnswerStatus } from "@/components/reading/ReadingArea";
 import type { WordDetail } from "@/components/reading/WordDetailModal";
 import type { HistoryRecord } from "@/types/history";
+import type { User } from "@supabase/supabase-js";
 
 const DEFAULT_OPTIONS: ClozeOptionsPerBlank = {
   1: ["words", "ideas", "books", "skills"],
@@ -22,34 +26,6 @@ const DEFAULT_OPTIONS: ClozeOptionsPerBlank = {
   3: ["blanks", "images", "videos", "sounds"],
   4: ["vocabulary", "memory", "habits", "goals"],
 };
-
-const WORD_CACHE_KEY = "word_detail_cache";
-
-// 从 localStorage 获取缓存
-function getCachedWordDetail(word: string): WordDetail | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const cache = localStorage.getItem(WORD_CACHE_KEY);
-    if (!cache) return null;
-    const parsed = JSON.parse(cache) as Record<string, WordDetail>;
-    return parsed[word.toLowerCase()] || null;
-  } catch {
-    return null;
-  }
-}
-
-// 保存到 localStorage 缓存
-function setCachedWordDetail(word: string, detail: WordDetail): void {
-  if (typeof window === "undefined") return;
-  try {
-    const cache = localStorage.getItem(WORD_CACHE_KEY);
-    const parsed = cache ? (JSON.parse(cache) as Record<string, WordDetail>) : {};
-    parsed[word.toLowerCase()] = detail;
-    localStorage.setItem(WORD_CACHE_KEY, JSON.stringify(parsed));
-  } catch (err) {
-    console.error("Failed to cache word detail:", err);
-  }
-}
 
 function parseWordList(words: string): string[] {
   return words
@@ -59,6 +35,8 @@ function parseWordList(words: string): string[] {
 }
 
 export function MainPage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [wordList, setWordList] = useState("");
   const [article, setArticle] = useState("");
   const [optionsFromServer, setOptionsFromServer] = useState<ClozeOptionsPerBlank | null>(null);
@@ -77,6 +55,26 @@ export function MainPage() {
 
   const opts = optionsFromServer ?? DEFAULT_OPTIONS;
   const highlightWords = useMemo(() => parseWordList(wordList), [wordList]);
+
+  // 检查用户登录状态
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = useCallback(async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  }, []);
 
   const getCorrectAnswer = useCallback(
     (blankIndex: number): string => opts[blankIndex]?.[0] ?? "",
@@ -116,7 +114,7 @@ export function MainPage() {
         setAnnotations(result.annotations ?? []);
         setAnswers({});
         
-        // Save to history
+        // Save to history (云端或本地)
         saveHistory({
           wordList,
           article: result.article,
@@ -146,8 +144,6 @@ export function MainPage() {
     (blankIndex: number, _key: "A" | "B" | "C" | "D", optionText: string) => {
       setAnswers((prev: Record<number, string>) => ({ ...prev, [blankIndex]: optionText }));
       setExplanationBlank(blankIndex);
-      // Keep the option sheet open to show details after selection
-      // User can close it by clicking outside
     },
     []
   );
@@ -159,8 +155,8 @@ export function MainPage() {
     setLoadingWordDetail(true);
     
     try {
-      // 1. 先查本地缓存
-      const cached = getCachedWordDetail(word);
+      // 1. 先查云端缓存
+      const cached = await getWordCacheFromCloud(word);
       if (cached) {
         console.log("从缓存加载:", word);
         setWordDetail(cached);
@@ -173,8 +169,8 @@ export function MainPage() {
       const detail = await getWordDetail(word);
       if (detail) {
         console.log("API 返回成功:", detail);
-        // 3. 保存到缓存
-        setCachedWordDetail(word, detail);
+        // 3. 保存到云端缓存
+        await saveWordCacheToCloud(word, detail);
         setWordDetail(detail);
       } else {
         console.warn("API 返回 null");
@@ -205,21 +201,50 @@ export function MainPage() {
     <div className="min-h-screen bg-white min-h-[100dvh] flex flex-col">
       <header className="border-b border-gray-100 bg-white flex-shrink-0 safe-area-top">
         <div className="mx-auto max-w-2xl w-full px-4 py-3 sm:py-4 flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-gray-900">考研完形填空 (Cloze Test)</h1>
-          <button
-            type="button"
-            onClick={() => setShowHistory(true)}
-            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-            aria-label="历史记录"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </button>
+          <h1 className="text-xl font-semibold text-gray-900">考研完形填空</h1>
+          <div className="flex items-center gap-2">
+            {user ? (
+              <>
+                <span className="text-sm text-gray-600 hidden sm:inline">
+                  {user.email}
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1 rounded-lg hover:bg-gray-100"
+                >
+                  退出
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="text-sm text-amber-600 hover:text-amber-700 px-3 py-1 rounded-lg hover:bg-amber-50 font-medium"
+              >
+                登录/注册
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setShowHistory(true)}
+              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              aria-label="历史记录"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
 
       <main className="flex-1 mx-auto max-w-2xl w-full px-4 py-4 sm:py-6 space-y-6 pb-24 sm:pb-8">
+        {!user && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
+            <p className="font-medium mb-1">💡 提示</p>
+            <p>登录后，您的历史记录和单词缓存将自动同步到云端，可在多设备间共享。</p>
+          </div>
+        )}
+
         <section>
           <label htmlFor="word-list" className="block text-sm font-medium text-gray-700 mb-2">
             单词列表（每行一个或逗号分隔）
@@ -312,6 +337,14 @@ export function MainPage() {
         open={showHistory}
         onSelect={handleHistorySelect}
         onClose={() => setShowHistory(false)}
+      />
+
+      <AuthModal
+        open={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={() => {
+          setShowAuthModal(false);
+        }}
       />
     </div>
   );

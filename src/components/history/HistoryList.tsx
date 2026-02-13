@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { HistoryRecord } from "@/types/history";
-import { getHistory, deleteHistory, clearHistory } from "@/types/history";
+import { getHistoryFromCloud, deleteHistoryFromCloud, clearHistoryFromCloud } from "@/types/history";
 
 export interface HistoryListProps {
   open: boolean;
@@ -11,27 +11,43 @@ export interface HistoryListProps {
 }
 
 export function HistoryList({ open, onSelect, onClose }: HistoryListProps) {
-  // All Hooks must be declared at the top level, before any conditional returns
   const [history, setHistory] = useState<HistoryRecord[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (open) {
-      setHistory(getHistory());
+      loadHistory();
     }
   }, [open]);
 
-  const handleDelete = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (confirm("确定要删除这条记录吗？")) {
-      deleteHistory(id);
-      setHistory(getHistory());
+  const loadHistory = async () => {
+    setLoading(true);
+    try {
+      const records = await getHistoryFromCloud();
+      setHistory(records);
+    } catch (err) {
+      console.error("Failed to load history:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleClear = () => {
+  const handleDelete = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (confirm("确定要删除这条记录吗？")) {
+      const success = await deleteHistoryFromCloud(id);
+      if (success) {
+        await loadHistory();
+      }
+    }
+  };
+
+  const handleClear = async () => {
     if (confirm("确定要清空所有历史记录吗？此操作不可恢复。")) {
-      clearHistory();
-      setHistory([]);
+      const success = await clearHistoryFromCloud();
+      if (success) {
+        setHistory([]);
+      }
     }
   };
 
@@ -46,7 +62,6 @@ export function HistoryList({ open, onSelect, onClose }: HistoryListProps) {
     });
   };
 
-  // Conditional rendering is handled in the return statement, not before Hooks
   if (!open) return null;
 
   return (
@@ -84,7 +99,12 @@ export function HistoryList({ open, onSelect, onClose }: HistoryListProps) {
             </div>
           </div>
 
-          {history.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
+              <p className="mt-2 text-sm text-gray-500">加载中...</p>
+            </div>
+          ) : history.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500">暂无历史记录</p>
             </div>
@@ -138,4 +158,3 @@ export function HistoryList({ open, onSelect, onClose }: HistoryListProps) {
     </>
   );
 }
-

@@ -11,10 +11,11 @@ export interface WordDetailModalProps {
   word: string | null;
   detail: WordDetail | null;
   loading: boolean;
+  error?: string | null;
   onClose: () => void;
 }
 
-export function WordDetailModal({ word, detail, loading, onClose }: WordDetailModalProps) {
+export function WordDetailModal({ word, detail, loading, error, onClose }: WordDetailModalProps) {
   if (!word) return null;
 
   return (
@@ -45,6 +46,11 @@ export function WordDetailModal({ word, detail, loading, onClose }: WordDetailMo
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
               <p className="mt-2 text-sm text-gray-500">加载中...</p>
             </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <p className="text-sm text-red-600 mb-2">查询失败</p>
+              <p className="text-xs text-gray-500">{error}</p>
+            </div>
           ) : detail ? (
             <div className="space-y-3">
               <div>
@@ -57,12 +63,13 @@ export function WordDetailModal({ word, detail, loading, onClose }: WordDetailMo
               </div>
               <div>
                 <p className="text-sm text-gray-500 mb-1">中文释义</p>
-                <p className="text-base text-gray-800">{detail.meaning}</p>
+                <p className="text-base text-gray-800 whitespace-pre-wrap">{detail.meaning}</p>
               </div>
             </div>
           ) : (
             <div className="text-center py-8">
               <p className="text-sm text-gray-500">未找到该单词的详细信息</p>
+              <p className="text-xs text-gray-400 mt-2">请检查网络连接或稍后重试</p>
             </div>
           )}
         </div>
@@ -70,5 +77,3 @@ export function WordDetailModal({ word, detail, loading, onClose }: WordDetailMo
     </>
   );
 }
-
-

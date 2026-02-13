@@ -71,6 +71,7 @@ export function MainPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [wordDetail, setWordDetail] = useState<WordDetail | null>(null);
+  const [wordDetailError, setWordDetailError] = useState<string | null>(null);
   const [loadingWordDetail, setLoadingWordDetail] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -154,27 +155,36 @@ export function MainPage() {
   const handleWordClick = useCallback(async (word: string) => {
     setSelectedWord(word);
     setWordDetail(null);
+    setWordDetailError(null);
     setLoadingWordDetail(true);
     
     try {
       // 1. 先查本地缓存
       const cached = getCachedWordDetail(word);
       if (cached) {
+        console.log("从缓存加载:", word);
         setWordDetail(cached);
         setLoadingWordDetail(false);
         return;
       }
 
       // 2. 缓存未命中，调用 API
+      console.log("调用 API 查询:", word);
       const detail = await getWordDetail(word);
       if (detail) {
+        console.log("API 返回成功:", detail);
         // 3. 保存到缓存
         setCachedWordDetail(word, detail);
         setWordDetail(detail);
       } else {
+        console.warn("API 返回 null");
+        setWordDetailError("API 未返回数据，请检查 DeepSeek API Key 配置");
         setWordDetail(null);
       }
     } catch (err) {
+      console.error("查询单词详情失败:", err);
+      const errorMsg = err instanceof Error ? err.message : "网络请求失败";
+      setWordDetailError(errorMsg);
       setWordDetail(null);
     } finally {
       setLoadingWordDetail(false);
@@ -294,6 +304,7 @@ export function MainPage() {
         word={selectedWord}
         detail={wordDetail}
         loading={loadingWordDetail}
+        error={wordDetailError}
         onClose={() => setSelectedWord(null)}
       />
 

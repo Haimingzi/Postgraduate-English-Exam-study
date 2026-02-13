@@ -52,6 +52,15 @@ export function MainPage() {
     [opts]
   );
 
+  const correctAnswers = useMemo((): Record<number, string> => {
+    const correct: Record<number, string> = {};
+    Object.keys(opts).forEach((key) => {
+      const blankIndex = Number(key);
+      correct[blankIndex] = getCorrectAnswer(blankIndex);
+    });
+    return correct;
+  }, [opts, getCorrectAnswer]);
+
   const answerStatus = useMemo((): Record<number, AnswerStatus> => {
     const status: Record<number, AnswerStatus> = {};
     for (const [key, userAnswer] of Object.entries(answers)) {
@@ -201,6 +210,7 @@ export function MainPage() {
                 onBlankClick={setSelectedBlank}
                 onWordClick={handleWordClick}
                 selectedAnswers={answers}
+                correctAnswers={correctAnswers}
                 answerStatus={answerStatus}
                 highlightWords={highlightWords}
               />

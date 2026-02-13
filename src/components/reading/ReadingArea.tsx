@@ -9,6 +9,7 @@ export interface ReadingAreaProps {
   onBlankClick: (blankIndex: number) => void;
   onWordClick?: (word: string) => void;
   selectedAnswers?: Record<number, string>;
+  correctAnswers?: Record<number, string>;
   answerStatus?: Record<number, AnswerStatus>;
   highlightWords?: string[];
   className?: string;
@@ -19,6 +20,7 @@ export function ReadingArea({
   onBlankClick,
   onWordClick,
   selectedAnswers = {},
+  correctAnswers = {},
   answerStatus = {},
   highlightWords = [],
   className = "",
@@ -51,8 +53,10 @@ export function ReadingArea({
             index={part.index!}
             placeholderLabel={part.value}
             selectedWord={selectedAnswers[part.index!]}
+            correctWord={correctAnswers[part.index!]}
             status={answerStatus[part.index!]}
             onBlankClick={onBlankClick}
+            onWordClick={onWordClick}
           />
         )
       )}
@@ -126,17 +130,25 @@ function BlankBadge({
   index,
   placeholderLabel,
   selectedWord,
+  correctWord,
   status,
   onBlankClick,
+  onWordClick,
 }: {
   index: number;
   placeholderLabel: string;
   selectedWord: string | undefined;
+  correctWord: string | undefined;
   status: "correct" | "wrong" | undefined;
   onBlankClick: (blankIndex: number) => void;
+  onWordClick?: (word: string) => void;
 }) {
   const answered = selectedWord != null && selectedWord !== "";
   const isCorrect = status === "correct";
+  
+  // 显示的单词：如果答错了，显示正确答案；如果答对了，显示用户答案
+  const displayWord = answered ? (isCorrect ? selectedWord : correctWord) : undefined;
+  
   const statusStyles = answered
     ? isCorrect
       ? "border-green-400 bg-green-50 text-green-800"
@@ -146,12 +158,18 @@ function BlankBadge({
   return (
     <button
       type="button"
-      onClick={() => !answered && onBlankClick(index)}
-      disabled={answered}
-      className={"inline-flex items-center justify-center min-w-[2.5rem] mx-0.5 px-2 py-0.5 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 " + statusStyles + (answered ? " cursor-default" : "")}
+      onClick={() => {
+        if (!answered) {
+          onBlankClick(index);
+        } else if (onWordClick && displayWord) {
+          // 如果已答题，点击可以查看单词详情
+          onWordClick(displayWord);
+        }
+      }}
+      className={"inline-flex items-center justify-center min-w-[2.5rem] mx-0.5 px-2 py-0.5 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 " + statusStyles + (answered && onWordClick ? " cursor-pointer hover:underline" : answered ? " cursor-default" : "")}
     >
-      {answered ? (
-        <span className="font-medium">{selectedWord}</span>
+      {displayWord ? (
+        <span className="font-medium">{displayWord}</span>
       ) : (
         <span className="text-gray-500">[ {placeholderLabel} ]</span>
       )}

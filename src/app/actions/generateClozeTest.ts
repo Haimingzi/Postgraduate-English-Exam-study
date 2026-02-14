@@ -57,11 +57,11 @@ CRITICAL REQUIREMENTS:
    - The additional words MUST be postgraduate entrance examination level vocabulary
    - Use the user's words first, then add your own postgraduate-level words
 
-2. Option composition: For each blank, the 4 options must include:
-   - At least 2 words from the combined set (user's words + your additional words)
+2. Option composition - EXTREMELY IMPORTANT: For each blank, the 4 options must include:
+   - CRITICAL: At least 2-3 words from the user's given words MUST appear in EVERY blank's 4 options
+   - This is MANDATORY to increase difficulty and prevent easy identification
    - The correct answer (which may be from user's words or your additional words)
-   - CRITICAL: If the correct answer is one of the user's given words, then the 4 options for that blank MUST include at least 2 words from the user's given words (to increase difficulty and prevent easy identification)
-   - The wrong options should be plausible distractors at postgraduate level
+   - The wrong options should be plausible distractors at postgraduate level with same part of speech
 
 3. Article difficulty:
    - Must be at or above postgraduate entrance examination difficulty
@@ -90,9 +90,9 @@ Article rules:
 
 Option rules (make the choices harder):
 - For each blank n, options[n][0] is the correct word.
+- CRITICAL: At least 2-3 words from the user's given words MUST appear in EVERY blank's 4 options
 - The 3 wrong options must be plausible but incorrect in context: same part of speech, similar difficulty level, preferably near-synonyms, collocations, or common confusions at postgraduate level.
 - Do NOT repeat the correct word in the wrong options.
-- At least 2 of the 4 options must come from the combined word set (user's words + your additional words).
 
 JSON rules:
 - "article" uses {{1}}, {{2}}, {{3}}, ... in order.
@@ -124,7 +124,7 @@ function buildUserPrompt(words: string): string {
 IMPORTANT: These are the user's given words (case-insensitive):
 ${list.map((w) => `- ${w}`).join("\n")}
 
-Remember: If a blank's correct answer is one of these user-given words, then that blank's 4 options must include at least 2 words from this user-given word list to increase difficulty.`;
+CRITICAL REQUIREMENT: For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {
@@ -187,6 +187,16 @@ async function callDeepSeek(userPrompt: string): Promise<string> {
   }
 }
 
+// 随机打乱数组
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 function parseAndValidate(jsonText: string): GenerateClozeJson {
   let parsed: unknown;
   let parseError: Error | null = null;
@@ -227,9 +237,9 @@ function parseAndValidate(jsonText: string): GenerateClozeJson {
     if (!Array.isArray(value) || value.length !== 4) {
       throw new Error(`options["${key}"] 必须为 4 个字符串的数组。`);
     }
-    optionsOut[String(key)] = value.every((v) => typeof v === "string")
-      ? (value as [string, string, string, string])
-      : (value.map(String) as [string, string, string, string]);
+    // 随机打乱选项顺序，让正确答案不总是第一个
+    const shuffled = shuffleArray(value.every((v) => typeof v === "string") ? value : value.map(String));
+    optionsOut[String(key)] = shuffled as [string, string, string, string];
   }
 
   // Parse optionsDetail if present
@@ -254,7 +264,20 @@ function parseAndValidate(jsonText: string): GenerateClozeJson {
           }
         }
         if (detailArray.length === 4) {
-          optionsDetailOut[String(key)] = detailArray as [OptionDetail, OptionDetail, OptionDetail, OptionDetail];
+          // 根据打乱后的选项顺序重新排列详情
+          const shuffledOptions = optionsOut[String(key)];
+          if (shuffledOptions) {
+            const reorderedDetails: OptionDetail[] = [];
+            for (const word of shuffledOptions) {
+              const detail = detailArray.find(d => d.word === word);
+              if (detail) {
+                reorderedDetails.push(detail);
+              }
+            }
+            if (reorderedDetails.length === 4) {
+              optionsDetailOut[String(key)] = reorderedDetails as [OptionDetail, OptionDetail, OptionDetail, OptionDetail];
+            }
+          }
         }
       }
     }

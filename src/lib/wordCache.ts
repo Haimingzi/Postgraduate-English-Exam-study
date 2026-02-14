@@ -115,3 +115,4 @@ export function setCachedWordDetail(word: string, detail: WordDetail): void {
   saveWordCacheToCloud(word, detail);
 }
 
+

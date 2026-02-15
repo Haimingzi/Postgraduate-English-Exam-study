@@ -82,11 +82,17 @@ CRITICAL REQUIREMENTS:
    - Provide Chinese meaning for each annotated word
    - These words will be displayed with their meanings in parentheses to help students
 
-Article rules:
-- The text should be a complete mini story or exposition, NOT a list of independent sentences.
-- Distribute blanks across the whole article: avoid putting many blanks in the same sentence or next to each other.
+Article rules - CRITICAL WRITING STYLE:
+- MUST be academic argumentative style, NOT literary or metaphor-heavy writing
+- Use NO MORE THAN ONE metaphor per paragraph
+- Follow clear logical structure: Topic sentence → explanation → reasoning/example → conclusion
+- Use given vocabulary NATURALLY with correct collocations - do NOT force unnatural usages
+- You may change word forms (e.g., analyze → analysis, enhance → enhanced) to fit naturally
+- Ensure correct collocations (e.g., "heed warning signs" NOT "converge warning signs", "untie a knot" NOT "dismiss a knot", "slim margin" NOT "margin a rope", "choke economic growth" NOT "choke a development")
+- The text should be a complete coherent exposition with 2-3 paragraphs (250-400 words total)
+- Distribute blanks across the whole article: avoid putting many blanks in the same sentence or next to each other
 - Use advanced grammar: complex sentences, passive voice, subjunctive mood, etc.
-- Vocabulary should be at postgraduate level (CET-6 and above, IELTS 6.5+ level)
+- Vocabulary should be at postgraduate level (CET-6 and above, typical of 考研英语一阅读)
 
 Option rules (make the choices harder):
 - For each blank n, options[n][0] is the correct word.
@@ -124,7 +130,23 @@ function buildUserPrompt(words: string): string {
 IMPORTANT: These are the user's given words (case-insensitive):
 ${list.map((w) => `- ${w}`).join("\n")}
 
-CRITICAL REQUIREMENT: For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.`;
+CRITICAL REQUIREMENTS:
+
+1. For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.
+
+2. WRITING STYLE - Use academic argumentative style for 考研英语一阅读:
+   - Use given vocabulary NATURALLY with correct collocations
+   - Do NOT force unnatural word combinations
+   - You may change word forms to fit context (e.g., analyze → analysis, enhance → enhancement)
+   - Avoid literary or metaphor-heavy writing (max ONE metaphor per paragraph)
+   - Follow logical structure: Topic sentence → explanation → reasoning/example → conclusion
+   - Ensure correct collocations like:
+     ✔ "heed early warning signs" (NOT "converge warning signs")
+     ✔ "untie a knot" (NOT "dismiss a knot")
+     ✔ "slim margin for error" (NOT "margin a rope")
+     ✔ "choke economic growth" (NOT "choke a development")
+     ✔ "foster innovation" (NOT "foster a technology")
+     ✔ "bridge the gap" (NOT "bridge a distance")`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {

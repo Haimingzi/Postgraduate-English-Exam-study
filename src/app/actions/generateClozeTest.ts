@@ -52,9 +52,10 @@ Format:
 
 CRITICAL REQUIREMENTS:
 
-1. Additional blanks: If the user provides N words, you must create at least N + ceil(N/2) blanks total. For example:
-   - If user provides 6 words, create at least 9 blanks (6 given + 3 additional)
-   - The additional words MUST be postgraduate entrance examination level vocabulary
+1. Blank requirements: Create 8-12 blanks total to help users memorize vocabulary through context.
+   - If user provides N words, create at least N + ceil(N/2) blanks (e.g., 6 words → 9 blanks minimum)
+   - IMPORTANT: Key vocabulary should appear 2-3 times in DIFFERENT sentences throughout the passage to reinforce memory
+   - Each blank must test one of: collocation, logical connector, word meaning distinction, or grammar
    - Use the user's words first, then add your own postgraduate-level words
 
 2. Option composition - EXTREMELY IMPORTANT: For each blank, the 4 options must include:
@@ -63,8 +64,10 @@ CRITICAL REQUIREMENTS:
    - The correct answer (which may be from user's words or your additional words)
    - The wrong options should be plausible distractors at postgraduate level with same part of speech
 
-3. Article difficulty:
-   - Must be at or above postgraduate entrance examination difficulty
+3. Article content and structure:
+   - Topic: Academic subjects like economics, technology, society, education, environment
+   - Must be at postgraduate entrance examination difficulty
+   - CRITICAL: Important vocabulary should appear 2-3 times in DIFFERENT sentences to aid memorization
    - Include complex sentence structures: subordinate clauses, participial phrases, inverted sentences, etc.
    - Use academic vocabulary and formal expressions
    - The content should be intellectually challenging and appropriate for postgraduate students
@@ -134,7 +137,19 @@ CRITICAL REQUIREMENTS:
 
 1. For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.
 
-2. WRITING STYLE - Use academic argumentative style for 考研英语一阅读:
+2. VOCABULARY MEMORIZATION - Help users memorize words through repetition:
+   - CRITICAL: Important vocabulary (especially user-given words) should appear 2-3 times in DIFFERENT sentences throughout the passage
+   - This repetition reinforces memory and shows different usage contexts
+   - Each appearance should use natural collocations
+
+3. BLANK DESIGN - Each blank must test one specific skill:
+   - Collocation (e.g., "slim margin", "heed warnings", "foster innovation")
+   - Logical connector (e.g., however, therefore, moreover)
+   - Word meaning distinction (e.g., affect vs. effect, adapt vs. adopt)
+   - Grammar (e.g., verb tense, preposition, article)
+
+4. WRITING STYLE - Use academic argumentative style for 考研英语一阅读:
+   - Topic: Economics, technology, society, education, or environment
    - Use given vocabulary NATURALLY with correct collocations
    - Do NOT force unnatural word combinations
    - You may change word forms to fit context (e.g., analyze → analysis, enhance → enhancement)

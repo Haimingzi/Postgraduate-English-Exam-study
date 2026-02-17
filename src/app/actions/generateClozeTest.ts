@@ -89,13 +89,28 @@ Article rules - CRITICAL WRITING STYLE:
 - MUST be academic argumentative style, NOT literary or metaphor-heavy writing
 - Use NO MORE THAN ONE metaphor per paragraph
 - Follow clear logical structure: Topic sentence → explanation → reasoning/example → conclusion
-- Use given vocabulary NATURALLY with correct collocations - do NOT force unnatural usages
+- CRITICAL: Every sentence must sound like it's from The Economist - professional, natural, and idiomatic
+- Use given vocabulary ONLY in NATURAL collocations - if a word cannot be used naturally, SKIP IT
+- NEVER force vocabulary usage - natural English is the top priority
 - You may change word forms (e.g., analyze → analysis, enhance → enhanced) to fit naturally
-- Ensure correct collocations (e.g., "heed warning signs" NOT "converge warning signs", "untie a knot" NOT "dismiss a knot", "slim margin" NOT "margin a rope", "choke economic growth" NOT "choke a development")
 - The text should be a complete coherent exposition with 2-3 paragraphs (250-400 words total)
 - Distribute blanks across the whole article: avoid putting many blanks in the same sentence or next to each other
 - Use advanced grammar: complex sentences, passive voice, subjunctive mood, etc.
 - Vocabulary should be at postgraduate level (CET-6 and above, typical of 考研英语一阅读)
+
+SELF-CHECK REQUIREMENT (run this check for EVERY sentence before finalizing):
+1. Is this a real, natural collocation?
+2. Would a native English speaker say this?
+3. Does the grammar match the word class (noun as noun, verb as verb)?
+4. Does this sound like professional journalism (e.g., The Economist)?
+5. If ANY answer is NO → REWRITE the sentence
+
+FORBIDDEN collocations (NEVER use):
+- knot + abstract concepts (e.g., "knot economic growth")
+- margin + as verb (e.g., "margin pressures")
+- choke + emotions/ideas (e.g., "choke warning signs", "choke concerns")
+- dismiss + physical objects (e.g., "dismiss damage", "dismiss a knot")
+- converge + direct objects that don't fit (e.g., "converge warning signs")
 
 Option rules (make the choices harder):
 - For each blank n, options[n][0] is the correct word.
@@ -176,16 +191,20 @@ CRITICAL REQUIREMENTS:
    - "foster innovation" / "foster growth"
    - "bridge the gap" / "bridge differences"
    
-   ❌ WRONG collocations (NEVER use these):
-   - "converge warning signs" (converge doesn't take warnings)
-   - "dismiss a knot" (dismiss is for ideas, not physical objects)
-   - "margin a rope" (margin is not a verb)
-   - "choke concerns" (choke is for flow/supply, not emotions)
-   - "knot innovation" (knot is not a verb for abstract concepts)
-   - "margin pressures" (wrong collocation)
-   - "convergence recovery" (awkward combination)
+   ❌ FORBIDDEN collocations (NEVER use these):
+   - "knot economic growth" / "knot innovation" (knot is not a verb for abstract concepts)
+   - "margin pressures" / "margin a rope" (margin is not a verb)
+   - "choke warning signs" / "choke concerns" (choke is for flow/supply, not emotions/ideas)
+   - "dismiss damage" / "dismiss a knot" (dismiss is for ideas, not physical objects)
+   - "converge warning signs" (converge doesn't take warnings as direct object)
    
-   RULE: If you're unsure about a collocation, DON'T USE IT. Choose a different word or sentence structure.`;
+   MANDATORY SELF-CHECK for EVERY sentence:
+   1. Is this a real collocation? (Check in your knowledge)
+   2. Would a native speaker say this? (Imagine reading it in The Economist)
+   3. Does grammar match word class? (noun as noun, verb as verb)
+   4. If ANY answer is NO → REWRITE immediately
+   
+   RULE: If you're unsure about a collocation, DON'T USE IT. Choose a different word or sentence structure. Natural English > Using all user words.`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {

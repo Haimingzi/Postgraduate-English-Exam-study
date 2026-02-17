@@ -62,11 +62,16 @@ CRITICAL REQUIREMENTS:
 
 1. PASSAGE STRUCTURE - CRITICAL:
    - Generate MULTIPLE short passages (NOT one long article)
-   - Number of passages ≈ Number of user's words
+   - Number of passages ≈ Number of user's words ÷ 3 (约三分之一)
    - Each passage: 40-80 words
    - Each passage has a numbered title (e.g., "1. Economic Growth")
-   - Each passage typically has 1-2 blanks
+   - Each passage has 3-4 blanks
    - Total blanks ≈ Number of user's words
+   
+   Example: User gives 12 words
+   - Generate 4 passages (12 ÷ 3)
+   - Each passage: 40-80 words with 3 blanks
+   - Total: 12 blanks
    
 2. BLANK REQUIREMENTS:
    - Each blank's answer must be DIFFERENT (no repeated answers)
@@ -87,20 +92,27 @@ CRITICAL REQUIREMENTS:
 
 3. PASSAGE CONTENT AND STRUCTURE:
    - Format: Multiple numbered short passages with titles
-   - Each passage: 40-80 words
+   - Number of passages ≈ User's word count ÷ 3
+   - Each passage: 40-80 words with 3-4 blanks
    - Topics: Economics, technology, society, education, environment, etc.
    - Each passage focuses on ONE specific topic
-   - Difficulty: Around 考研英语一 level
+   - DIFFICULTY: Must be equivalent to 考研英语一 level (CRITICAL)
    - Each answer word used ONLY ONCE across ALL passages
-   - Include complex sentence structures
+   - Include complex sentence structures (subordinate clauses, participial phrases, etc.)
    - Use academic vocabulary and formal expressions
    
-   Example structure:
+   Example: User gives 12 words
    1. Climate Change
-   [40-80 words with 1-2 blanks]
+   [40-80 words with 3 blanks]
    
    2. Digital Economy
-   [40-80 words with 1-2 blanks]
+   [40-80 words with 3 blanks]
+   
+   3. Social Development
+   [40-80 words with 3 blanks]
+   
+   4. Educational Reform
+   [40-80 words with 3 blanks]
 
 4. Options detail:
    - For each option in each blank, provide:
@@ -130,17 +142,20 @@ Article rules - CRITICAL WRITING STYLE:
 
 SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
 1. Generated MULTIPLE short passages (NOT one long article)?
-2. Each passage has a numbered title (e.g., "1. Economic Growth")?
-3. Each passage is 40-80 words?
-4. Number of passages ≈ Number of user's words?
-5. All collocations are natural?
-6. Grammar and part of speech match correctly?
-7. Each blank has a DIFFERENT answer (no repeated answers)?
-8. Each answer word has a DIFFERENT ROOT FORM (no "undo" and "undoing" together)?
-9. MAJORITY of answers from user's words?
-10. Correct answers are RANDOMLY distributed across A/B/C/D options?
-11. Non-考研 words are annotated with Chinese meanings?
-12. If ANY answer is NO → REWRITE immediately
+2. Number of passages ≈ User's word count ÷ 3?
+3. Each passage has a numbered title (e.g., "1. Economic Growth")?
+4. Each passage is 40-80 words?
+5. Each passage has 3-4 blanks?
+6. Total blanks ≈ Number of user's words?
+7. Difficulty is equivalent to 考研英语一 level?
+8. All collocations are natural?
+9. Grammar and part of speech match correctly?
+10. Each blank has a DIFFERENT answer (no repeated answers)?
+11. Each answer word has a DIFFERENT ROOT FORM (no "undo" and "undoing" together)?
+12. MAJORITY of answers from user's words?
+13. Correct answers are RANDOMLY distributed across A/B/C/D options?
+14. Non-考研 words are annotated with Chinese meanings?
+15. If ANY answer is NO → REWRITE immediately
 
 FORBIDDEN collocations (NEVER use):
 - knot + abstract concepts (e.g., "knot economic growth")
@@ -217,8 +232,8 @@ CRITICAL REQUIREMENTS:
 
 2. MULTIPLE PASSAGES STRATEGY - CRITICAL:
    - Generate MULTIPLE short passages (NOT one long article)
-   - Number of passages ≈ Number of user's words
-   - Each passage: 40-80 words with 1-2 blanks
+   - Number of passages ≈ Number of user's words ÷ 3 (约三分之一)
+   - Each passage: 40-80 words with 3-4 blanks
    - Each passage has a numbered title
    - Add approximately N/5 additional 考研-level words (where N = user's word count)
    - Each blank's answer must be DIFFERENT
@@ -228,14 +243,16 @@ CRITICAL REQUIREMENTS:
    - MAJORITY of answers from user's words (大部分)
    - SMALL PORTION from your added words (小部分)
    - Natural collocations and grammar are MORE IMPORTANT
+   - DIFFICULTY: Must be equivalent to 考研英语一 level
    
-   Example: User gives 10 words
-   - Generate about 10 short passages
-   - Each passage: 40-80 words with 1-2 blanks
-   - Add 2 additional 考研 words
-   - 8 answers from user's words (majority)
+   Example: User gives 12 words
+   - Generate 4 passages (12 ÷ 3)
+   - Each passage: 40-80 words with 3 blanks
+   - Add 2-3 additional 考研 words
+   - 10 answers from user's words (majority)
    - 2 answers from your added words (small portion)
    - Each answer has a different root form
+   - Total: 12 blanks across 4 passages
 
 3. BLANK DESIGN - Each blank must test one specific skill:
    - Collocation (e.g., "slim margin", "heed warnings", "foster innovation")

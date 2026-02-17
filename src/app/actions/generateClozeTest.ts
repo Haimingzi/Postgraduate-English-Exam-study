@@ -128,7 +128,12 @@ function buildUserPrompt(words: string): string {
   if (list.length === 0) {
     return "Generate a short cloze paragraph with 1 blank.";
   }
-  return `Generate a cloze test using these ${list.length} word(s). Use each word exactly once as a blank.
+  return `Generate a cloze test using these ${list.length} word(s) as reference vocabulary.
+
+IMPORTANT: You do NOT need to use ALL user words if they don't fit naturally. Natural collocations are MORE IMPORTANT than forcing all words into the passage. You may:
+- Use user words where they fit naturally
+- Replace user words with other 考研-level vocabulary if needed
+- Change word forms (e.g., analyze → analysis)
 
 IMPORTANT: These are the user's given words (case-insensitive):
 ${list.map((w) => `- ${w}`).join("\n")}
@@ -150,18 +155,37 @@ CRITICAL REQUIREMENTS:
 
 4. WRITING STYLE - Use academic argumentative style for 考研英语一阅读:
    - Topic: Economics, technology, society, education, or environment
-   - Use given vocabulary NATURALLY with correct collocations
-   - Do NOT force unnatural word combinations
+   - CRITICAL: Natural English is MORE IMPORTANT than using all user words
+   - ONLY use user words if they fit NATURALLY with correct collocations
+   - If a user word doesn't fit naturally, REPLACE it with other 考研-level vocabulary
    - You may change word forms to fit context (e.g., analyze → analysis, enhance → enhancement)
    - Avoid literary or metaphor-heavy writing (max ONE metaphor per paragraph)
    - Follow logical structure: Topic sentence → explanation → reasoning/example → conclusion
-   - Ensure correct collocations like:
-     ✔ "heed early warning signs" (NOT "converge warning signs")
-     ✔ "untie a knot" (NOT "dismiss a knot")
-     ✔ "slim margin for error" (NOT "margin a rope")
-     ✔ "choke economic growth" (NOT "choke a development")
-     ✔ "foster innovation" (NOT "foster a technology")
-     ✔ "bridge the gap" (NOT "bridge a distance")`;
+
+5. COLLOCATION RULES - EXTREMELY CRITICAL:
+   Every word must use NATURAL, COMMON collocations. Ask yourself: "Would a native academic writer say this?"
+   
+   ✔ CORRECT collocations:
+   - "heed early warnings" / "heed advice"
+   - "dismiss concerns" / "dismiss claims"
+   - "slim margin for error" / "profit margin"
+   - "choke economic growth" / "choke supply"
+   - "converge on a solution" / "opinions converge"
+   - "untie a knot" / "untie restrictions"
+   - "mitigate damage" / "mitigate risks"
+   - "foster innovation" / "foster growth"
+   - "bridge the gap" / "bridge differences"
+   
+   ❌ WRONG collocations (NEVER use these):
+   - "converge warning signs" (converge doesn't take warnings)
+   - "dismiss a knot" (dismiss is for ideas, not physical objects)
+   - "margin a rope" (margin is not a verb)
+   - "choke concerns" (choke is for flow/supply, not emotions)
+   - "knot innovation" (knot is not a verb for abstract concepts)
+   - "margin pressures" (wrong collocation)
+   - "convergence recovery" (awkward combination)
+   
+   RULE: If you're unsure about a collocation, DON'T USE IT. Choose a different word or sentence structure.`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {

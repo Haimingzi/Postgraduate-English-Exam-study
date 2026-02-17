@@ -29,13 +29,16 @@ CRITICAL: Output ONLY valid JSON. Do NOT wrap in markdown code blocks. Do NOT ad
 
 Format:
 {
-  "article": "Multiple numbered short passages with titles. Each passage is 40-80 words. Use placeholders {{1}}, {{2}}, {{3}}, ... for each blank. Format example:
+  "article": "Multiple numbered short passages with titles. Each passage is 40-80 words. CRITICAL: Add a blank line between passages for readability. Use placeholders {{1}}, {{2}}, {{3}}, ... for each blank. Format example:
 
 1. Economic Growth
 The economy has shown {{1}} signs of recovery...
 
 2. Technological Innovation
 Recent advances in AI have {{2}} transformed...
+
+3. Environmental Protection
+Climate change poses {{3}} challenges...
 
 Each passage must be at postgraduate entrance examination level.",
   "options": {
@@ -92,11 +95,13 @@ CRITICAL REQUIREMENTS:
 
 3. PASSAGE CONTENT AND STRUCTURE:
    - Format: Multiple numbered short passages with titles
+   - CRITICAL: Add a BLANK LINE between passages (空一行)
    - Number of passages ≈ User's word count ÷ 3
    - Each passage: 40-80 words with 3-4 blanks
-   - Topics: Economics, technology, society, education, environment, etc.
+   - Topics: ANY academic subject (不限主题) - economics, technology, society, education, environment, science, culture, politics, etc.
    - Each passage focuses on ONE specific topic
    - DIFFICULTY: Must be equivalent to 考研英语一 level (CRITICAL)
+   - COLLOCATION: Every word collocation must be COMPLETELY CORRECT and FORMAL (完全正确而且正规)
    - Each answer word used ONLY ONCE across ALL passages
    - Include complex sentence structures (subordinate clauses, participial phrases, etc.)
    - Use academic vocabulary and formal expressions
@@ -113,6 +118,8 @@ CRITICAL REQUIREMENTS:
    
    4. Educational Reform
    [40-80 words with 3 blanks]
+   
+   (Note: blank lines between passages)
 
 4. Options detail:
    - For each option in each blank, provide:
@@ -142,20 +149,22 @@ Article rules - CRITICAL WRITING STYLE:
 
 SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
 1. Generated MULTIPLE short passages (NOT one long article)?
-2. Number of passages ≈ User's word count ÷ 3?
-3. Each passage has a numbered title (e.g., "1. Economic Growth")?
-4. Each passage is 40-80 words?
-5. Each passage has 3-4 blanks?
-6. Total blanks ≈ Number of user's words?
-7. Difficulty is equivalent to 考研英语一 level?
-8. All collocations are natural?
-9. Grammar and part of speech match correctly?
-10. Each blank has a DIFFERENT answer (no repeated answers)?
-11. Each answer word has a DIFFERENT ROOT FORM (no "undo" and "undoing" together)?
-12. MAJORITY of answers from user's words?
-13. Correct answers are RANDOMLY distributed across A/B/C/D options?
-14. Non-考研 words are annotated with Chinese meanings?
-15. If ANY answer is NO → REWRITE immediately
+2. Added a BLANK LINE between each passage (空一行)?
+3. Number of passages ≈ User's word count ÷ 3?
+4. Each passage has a numbered title (e.g., "1. Economic Growth")?
+5. Each passage is 40-80 words?
+6. Each passage has 3-4 blanks?
+7. Total blanks ≈ Number of user's words?
+8. Difficulty is equivalent to 考研英语一 level?
+9. ALL collocations are COMPLETELY CORRECT and FORMAL (完全正确而且正规)?
+10. Every collocation would appear in academic journals or The Economist?
+11. Grammar and part of speech match correctly?
+12. Each blank has a DIFFERENT answer (no repeated answers)?
+13. Each answer word has a DIFFERENT ROOT FORM (no "undo" and "undoing" together)?
+14. MAJORITY of answers from user's words?
+15. Correct answers are RANDOMLY distributed across A/B/C/D options?
+16. Non-考研 words are annotated with Chinese meanings?
+17. If ANY answer is NO → REWRITE immediately
 
 FORBIDDEN collocations (NEVER use):
 - knot + abstract concepts (e.g., "knot economic growth")
@@ -282,11 +291,33 @@ CRITICAL REQUIREMENTS:
    - Only annotate content words that exceed 考研 level
    - Keep annotations minimal
 
-6. COLLOCATION RULES:
-   Every word must use NATURAL collocations. If unsure → DON'T USE IT.
+6. COLLOCATION RULES - EXTREMELY CRITICAL:
+   Every word must use COMPLETELY CORRECT and FORMAL collocations. This is the HIGHEST priority.
    
-   ✔ CORRECT: heed warnings, dismiss concerns, slim margin, choke growth, converge on solution
-   ❌ WRONG: knot innovation, margin pressures, choke concerns, dismiss damage Natural English > Using all user words.`;
+   RULES:
+   - Collocations must be NATURAL and COMMON in academic English
+   - Collocations must be FORMAL and PROPER (正规的)
+   - If you're even slightly unsure → DON'T USE IT
+   - Check: Would this appear in The Economist, Nature, or academic journals?
+   
+   ✔ CORRECT collocations (natural, formal, proper):
+   - heed warnings / heed advice
+   - dismiss concerns / dismiss claims
+   - slim margin for error / profit margin
+   - choke economic growth / choke supply
+   - converge on a solution / opinions converge
+   - mitigate damage / mitigate risks
+   - foster innovation / foster growth
+   - bridge the gap / bridge differences
+   
+   ❌ WRONG collocations (unnatural, informal, or incorrect):
+   - knot innovation (knot is not used this way)
+   - margin pressures (wrong collocation)
+   - choke concerns (choke doesn't go with concerns)
+   - dismiss damage (dismiss is for ideas, not damage)
+   - converge warning signs (wrong structure)
+   
+   MANDATORY: Every collocation must be verified as correct and formal before use. Natural English > Using all user words.`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {

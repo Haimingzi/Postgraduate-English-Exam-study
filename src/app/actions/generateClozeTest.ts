@@ -29,20 +29,9 @@ CRITICAL: Output ONLY valid JSON. Do NOT wrap in markdown code blocks. Do NOT ad
 
 Format:
 {
-  "article": "Multiple numbered short passages with titles. Each passage is 40-80 words. CRITICAL: Add MULTIPLE blank lines (2-3 lines) between passages for better readability. Use placeholders {{1}}, {{2}}, {{3}}, ... for each blank. Format example:
+  "article": "ONE coherent passage of 150-250 words. Use placeholders {{1}}, {{2}}, {{3}}, ... for each blank. Topic can be anything. Difficulty should be natural English. Annotate non-考研 words with Chinese meaning in parentheses. Example:
 
-1. Economic Growth
-The economy has shown {{1}} signs of recovery...
-
-
-2. Technological Innovation
-Recent advances in AI have {{2}} transformed...
-
-
-3. Environmental Protection
-Climate change poses {{3}} challenges...
-
-Each passage must be at postgraduate entrance examination level.",
+The rapid development of technology has {{1}} our daily lives in countless ways. Modern smartphones (智能手机) allow us to {{2}} with people across the globe instantly...",
   "options": {
     "1": ["correctWord", "wrong1", "wrong2", "wrong3"],
     "2": ["correctWord", "wrong1", "wrong2", "wrong3"],
@@ -65,30 +54,25 @@ Each passage must be at postgraduate entrance examination level.",
 
 CRITICAL REQUIREMENTS:
 
-1. PASSAGE STRUCTURE - CRITICAL:
-   - Generate MULTIPLE short passages (NOT one long article)
-   - Number of passages ≈ Number of user's words ÷ 3 (约三分之一)
-   - Each passage: 40-80 words
-   - Each passage has a numbered title (e.g., "1. Economic Growth")
-   - Each passage has 3-4 blanks
-   - Total blanks ≈ Number of user's words
+1. PASSAGE STRUCTURE - SIMPLIFIED:
+   - Generate ONE coherent passage
+   - Length: 150-250 words
+   - Use all user-provided words as blanks
+   - Topic: ANY subject (任意主题)
+   - Difficulty: Natural English, doesn't need to be 考研 level
    
-   Example: User gives 12 words
-   - Generate 4 passages (12 ÷ 3)
-   - Each passage: 40-80 words with 3 blanks
-   - Total: 12 blanks
+   Example: User gives 10 words
+   - Generate 1 passage with 10 blanks
+   - 150-250 words total
    
-2. BLANK REQUIREMENTS - CRITICAL:
+2. BLANK REQUIREMENTS - SIMPLIFIED:
    - MANDATORY: You MUST use ALL user-provided words (每个我给的单词都要用上)
    - Each blank's answer must be DIFFERENT (no repeated answers)
-   - CRITICAL: Answer words must have DIFFERENT ROOT FORMS (词根不同)
+   - Answer words must have DIFFERENT ROOT FORMS (词根不同)
      * "undo" and "undoing" → same root → CANNOT both be answers
-     * "analyze" and "analysis" → same root → CANNOT both be answers
      * If user provides words with same root, use ONLY ONE of them
-   - NEVER repeat any word or its root form (不能出现重复使用的情况只要是它们词根一样都不行)
-   - You add approximately N/5 additional 考研 words
-   - Total blanks = All user words + additional words
-   - Each blank must test: collocation, logical connector, word distinction, or grammar
+   - NEVER repeat any word or its root form
+   - Each blank should test natural usage in context
 
 2. Option composition - EXTREMELY IMPORTANT:
    - Each blank has 4 options (A, B, C, D)
@@ -98,38 +82,19 @@ CRITICAL REQUIREMENTS:
    - At least 2-3 words from user's given words should appear in each blank's 4 options
    - Wrong options should be plausible distractors with same part of speech
 
-3. PASSAGE CONTENT AND STRUCTURE:
-   - Format: Multiple numbered short passages with titles
-   - CRITICAL: Add MULTIPLE BLANK LINES (2-3 lines) between passages (空几行)
-   - Number of passages ≈ User's word count ÷ 3
-   - Each passage: 40-80 words with 3-4 blanks
-   - TOPIC SELECTION: Choose each passage's topic based on the blank words in that passage (根据挖空词自行定主题)
-     * Example: If blanks are "enhance, facilitate, margin" → topic could be "Economic Growth" or "Business Strategy"
-     * Example: If blanks are "analyze, evaluate, implement" → topic could be "Research Methods" or "Policy Implementation"
-   - Each passage focuses on ONE specific topic
-   - DIFFICULTY: Must be equivalent to 考研英语一 level (CRITICAL)
-   - COLLOCATION: Every word collocation must be NATURAL and FORMAL (自然正规)
-   - Each answer word used ONLY ONCE across ALL passages
-   - Include complex sentence structures (subordinate clauses, participial phrases, etc.)
-   - Use academic vocabulary and formal expressions
+3. PASSAGE CONTENT - SIMPLIFIED:
+   - Format: ONE coherent passage
+   - Length: 150-250 words
+   - Topic: ANY subject (任意主题) - can be about anything
+   - Difficulty: Natural English, doesn't need to be 考研 level
+   - Use natural collocations and correct grammar
+   - Each answer word used ONLY ONCE
+   - ANNOTATION: Non-考研 words must be annotated with Chinese meaning in parentheses
    
-   Example: User gives 12 words
-   1. Economic Growth
-   [40-80 words with 3 blanks: enhance, facilitate, margin]
-   
-   
-   2. Research Methods
-   [40-80 words with 3 blanks: analyze, evaluate, implement]
-   
-   
-   3. Environmental Protection
-   [40-80 words with 3 blanks: mitigate, foster, converge]
-   
-   
-   4. Policy Development
-   [40-80 words with 3 blanks: demonstrate, dismiss, choke]
-   
-   (Note: MULTIPLE blank lines between passages)
+   Example: User gives 10 words
+   Generate one passage about any topic (e.g., travel, technology, daily life, etc.)
+   [150-250 words with 10 blanks]
+   Non-考研 words annotated like: sophisticated (复杂的)
 
 4. Options detail:
    - For each option in each blank, provide:
@@ -158,25 +123,17 @@ Article rules - CRITICAL WRITING STYLE:
 - Vocabulary should be at postgraduate level (CET-6 and above, typical of 考研英语一阅读)
 
 SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
-1. Generated MULTIPLE short passages (NOT one long article)?
-2. Added MULTIPLE BLANK LINES (2-3 lines) between each passage (空几行)?
-3. Number of passages ≈ User's word count ÷ 3?
-4. Each passage has a numbered title?
-5. Each passage's topic is based on the blank words in that passage (根据挖空词自行定主题)?
-6. Each passage is 40-80 words?
-7. Each passage has 3-4 blanks?
-8. Used ALL user-provided words (每个我给的单词都要用上)?
-9. Each blank has a DIFFERENT answer (no repeated answers)?
-10. Each answer word has a DIFFERENT ROOT FORM (不能出现重复使用的情况只要是它们词根一样都不行)?
-11. If user provided words with same root, used ONLY ONE of them?
-12. Difficulty is equivalent to 考研英语一 level?
-13. ALL collocations are NATURAL (自然的)?
-14. ALL collocations are FORMAL and PROPER (正规的)?
-15. Every collocation would appear in academic journals or The Economist?
-16. Grammar and part of speech match correctly?
-17. Correct answers are RANDOMLY distributed across A/B/C/D options?
-18. Non-考研 words are annotated with Chinese meanings?
-19. If ANY answer is NO → REWRITE immediately
+1. Generated ONE coherent passage (not multiple passages)?
+2. Passage length is 150-250 words?
+3. Used ALL user-provided words (每个我给的单词都要用上)?
+4. Each blank has a DIFFERENT answer (no repeated answers)?
+5. Each answer word has a DIFFERENT ROOT FORM (词根不同)?
+6. If user provided words with same root, used ONLY ONE of them?
+7. All collocations are natural?
+8. Grammar is correct?
+9. Correct answers are RANDOMLY distributed across A/B/C/D options?
+10. Non-考研 words are annotated with Chinese meanings in parentheses?
+11. If ANY answer is NO → REWRITE immediately
 
 FORBIDDEN collocations (NEVER use):
 - knot + abstract concepts (e.g., "knot economic growth")
@@ -251,31 +208,27 @@ CRITICAL REQUIREMENTS:
 
 1. For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.
 
-2. MULTIPLE PASSAGES STRATEGY - CRITICAL:
-   - Generate MULTIPLE short passages (NOT one long article)
-   - CRITICAL: Add MULTIPLE BLANK LINES (2-3 lines) between passages (空几行)
-   - Number of passages ≈ Number of user's words ÷ 3 (约三分之一)
-   - Each passage: 40-80 words with 3-4 blanks
-   - Each passage has a numbered title
+2. SINGLE PASSAGE STRATEGY - SIMPLIFIED:
+   - Generate ONE coherent passage
+   - Length: 150-250 words
+   - Topic: ANY subject (任意主题)
    - MANDATORY: You MUST use ALL user-provided words (每个我给的单词都要用上)
-   - Add approximately N/5 additional 考研-level words (where N = user's word count)
    - Each blank's answer must be DIFFERENT
-   - CRITICAL: Answer words must have DIFFERENT ROOT FORMS (词根不同)
+   - Answer words must have DIFFERENT ROOT FORMS (词根不同)
      * "undo" and "undoing" → same root → CANNOT both be answers
      * If user provides words with same root, use ONLY ONE of them
-     * Choose only ONE form of each root word as an answer
-   - NEVER repeat any word or its root form (不能出现重复使用的情况只要是它们词根一样都不行)
-   - Natural collocations and grammar are CRITICAL
-   - DIFFICULTY: Must be equivalent to 考研英语一 level
+   - NEVER repeat any word or its root form
+   - Use natural collocations and correct grammar
+   - Difficulty: Natural English, doesn't need to be 考研 level
+   - ANNOTATION: Non-考研 words must be annotated with Chinese meaning in parentheses
    
-   Example: User gives 12 words
-   - MUST use all 12 user words (mandatory)
-   - Generate 4 passages (12 ÷ 3)
-   - Each passage: 40-80 words with 3-4 blanks
-   - Add 2-3 additional 考研 words
-   - Total: 14-15 blanks across 4 passages (12 user words + 2-3 additional)
+   Example: User gives 10 words
+   - MUST use all 10 user words (mandatory)
+   - Generate 1 passage with 10 blanks
+   - 150-250 words total
+   - Topic can be anything
    - Each answer has a different root form
-   - Passages separated by 2-3 blank lines
+   - Non-考研 words annotated: word (中文释义)
 
 3. BLANK DESIGN - Each blank must test one specific skill:
    - Collocation (e.g., "slim margin", "heed warnings", "foster innovation")
@@ -305,39 +258,22 @@ CRITICAL REQUIREMENTS:
    - Only annotate content words that exceed 考研 level
    - Keep annotations minimal
 
-6. COLLOCATION RULES - HIGHEST PRIORITY:
-   Every word must use NATURAL and FORMAL collocations. This is MORE IMPORTANT than using all user words.
+5. COLLOCATION RULES - SIMPLIFIED:
+   Use natural collocations and correct grammar.
    
-   CRITICAL RULES:
-   - Collocations must be NATURAL (自然的) - sounds like native English
-   - Collocations must be FORMAL and PROPER (正规的) - appropriate for academic writing
-   - Collocations must be COMMON - frequently used in academic contexts
-   - If you're even slightly unsure → DON'T USE IT → Choose a different word
-   - Check: Would this appear in The Economist, Nature, or academic journals?
+   ✔ CORRECT collocations:
+   - heed warnings / heed advice
+   - dismiss concerns / dismiss claims
+   - slim margin / profit margin
+   - foster innovation / foster growth
    
-   ✔ CORRECT collocations (natural, formal, proper):
-   - heed warnings / heed advice (natural and formal)
-   - dismiss concerns / dismiss claims (natural and formal)
-   - slim margin for error / profit margin (natural and formal)
-   - choke economic growth / choke supply (natural and formal)
-   - converge on a solution / opinions converge (natural and formal)
-   - mitigate damage / mitigate risks (natural and formal)
-   - foster innovation / foster growth (natural and formal)
-   - bridge the gap / bridge differences (natural and formal)
+   ❌ WRONG collocations:
+   - knot innovation (unnatural)
+   - margin pressures (wrong)
+   - choke concerns (wrong)
+   - dismiss damage (wrong)
    
-   ❌ WRONG collocations (unnatural, informal, or incorrect):
-   - knot innovation (unnatural - knot is not used this way)
-   - margin pressures (unnatural - wrong collocation)
-   - choke concerns (unnatural - choke doesn't go with concerns)
-   - dismiss damage (unnatural - dismiss is for ideas, not damage)
-   - converge warning signs (unnatural - wrong structure)
-   
-   MANDATORY: Every collocation must be:
-   1. Natural (sounds like native English)
-   2. Formal (appropriate for academic writing)
-   3. Common (frequently used in academic contexts)
-   
-   If ANY of these is NO → DON'T USE IT Natural English > Using all user words.`;
+   Rule: Use natural English that sounds correct Natural English > Using all user words.`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {

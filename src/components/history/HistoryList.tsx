@@ -46,7 +46,7 @@ export function HistoryList({ open, onSelect, onClose }: HistoryListProps) {
     if (confirm("确定要清空所有历史记录吗？此操作不可恢复。")) {
       const success = await clearHistoryFromCloud();
       if (success) {
-        setHistory([]);
+      setHistory([]);
       }
     }
   };

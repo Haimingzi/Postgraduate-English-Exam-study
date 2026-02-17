@@ -54,9 +54,10 @@ CRITICAL REQUIREMENTS:
 
 1. Blank requirements: Create 8-12 blanks total to help users memorize vocabulary through context.
    - If user provides N words, create at least N + ceil(N/2) blanks (e.g., 6 words → 9 blanks minimum)
-   - IMPORTANT: Key vocabulary should appear 2-3 times in DIFFERENT sentences throughout the passage to reinforce memory
+   - CRITICAL: Use ONLY 30-50% of user words (e.g., if user gives 10 words, use only 3-5 of them)
+   - The remaining blanks should use OTHER natural postgraduate-level vocabulary
+   - NEVER repeat a vocabulary word unless it's part of a fixed collocation
    - Each blank must test one of: collocation, logical connector, word meaning distinction, or grammar
-   - Use the user's words first, then add your own postgraduate-level words
 
 2. Option composition - EXTREMELY IMPORTANT: For each blank, the 4 options must include:
    - CRITICAL: At least 2-3 words from the user's given words MUST appear in EVERY blank's 4 options
@@ -98,12 +99,13 @@ Article rules - CRITICAL WRITING STYLE:
 - Use advanced grammar: complex sentences, passive voice, subjunctive mood, etc.
 - Vocabulary should be at postgraduate level (CET-6 and above, typical of 考研英语一阅读)
 
-SELF-CHECK REQUIREMENT (run this check for EVERY sentence before finalizing):
-1. Is this a real, natural collocation?
-2. Would a native English speaker say this?
-3. Does the grammar match the word class (noun as noun, verb as verb)?
-4. Does this sound like professional journalism (e.g., The Economist)?
-5. If ANY answer is NO → REWRITE the sentence
+SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
+1. No unnatural collocations?
+2. No grammar mismatch (word class errors)?
+3. No excessive repetition (each word used only once unless fixed collocation)?
+4. Passage reads like The Economist?
+5. Used only 30-50% of user words?
+6. If ANY answer is NO → REWRITE immediately
 
 FORBIDDEN collocations (NEVER use):
 - knot + abstract concepts (e.g., "knot economic growth")
@@ -145,10 +147,14 @@ function buildUserPrompt(words: string): string {
   }
   return `Generate a cloze test using these ${list.length} word(s) as reference vocabulary.
 
-IMPORTANT: You do NOT need to use ALL user words if they don't fit naturally. Natural collocations are MORE IMPORTANT than forcing all words into the passage. You may:
-- Use user words where they fit naturally
-- Replace user words with other 考研-level vocabulary if needed
-- Change word forms (e.g., analyze → analysis)
+CRITICAL USAGE RULES:
+1. Use ONLY 30-50% of the user-provided words in the passage
+2. The remaining blanks should use OTHER natural postgraduate-level vocabulary
+3. NEVER repeat a vocabulary word unless it's part of a fixed collocation
+4. Natural collocations are MORE IMPORTANT than using all user words
+5. You may change word forms (e.g., analyze → analysis, enhance → enhanced)
+
+Example: If user provides 10 words, use only 3-5 of them, and create other blanks with different 考研-level words.
 
 IMPORTANT: These are the user's given words (case-insensitive):
 ${list.map((w) => `- ${w}`).join("\n")}
@@ -157,10 +163,11 @@ CRITICAL REQUIREMENTS:
 
 1. For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.
 
-2. VOCABULARY MEMORIZATION - Help users memorize words through repetition:
-   - CRITICAL: Important vocabulary (especially user-given words) should appear 2-3 times in DIFFERENT sentences throughout the passage
-   - This repetition reinforces memory and shows different usage contexts
-   - Each appearance should use natural collocations
+2. VOCABULARY MEMORIZATION - Help users memorize words through natural context:
+   - Use ONLY 30-50% of user-provided words
+   - NEVER repeat a vocabulary word unless it's part of a fixed collocation
+   - Each word should appear in natural, academic collocations
+   - The passage should read like an article from The Economist
 
 3. BLANK DESIGN - Each blank must test one specific skill:
    - Collocation (e.g., "slim margin", "heed warnings", "foster innovation")

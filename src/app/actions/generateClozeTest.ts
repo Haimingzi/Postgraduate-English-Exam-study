@@ -52,10 +52,13 @@ Format:
 
 CRITICAL REQUIREMENTS:
 
-1. Blank requirements:
-   - Create blanks using words from the total pool (user words + your added words)
-   - Try to use ALL words, but natural usage is the priority
-   - If a word doesn't fit naturally, skip it and use another 考研 word
+1. Blank requirements - CRITICAL:
+   - Number of blanks ≈ Number of user's words (差不多)
+   - Example: User gives 10 words → Create about 10 blanks
+   - Each blank's answer must be DIFFERENT (no repeated answers)
+   - MAJORITY of answers from user's words (大部分)
+   - SMALL PORTION of answers from your added 考研 words (小部分)
+   - Each word can ONLY be used ONCE as an answer
    - Each blank must test: collocation, logical connector, word distinction, or grammar
 
 2. Option composition - EXTREMELY IMPORTANT:
@@ -68,9 +71,9 @@ CRITICAL REQUIREMENTS:
 
 3. Article content and structure:
    - Topic: Academic subjects like economics, technology, society, education, environment
-   - Paragraph length: 80-120 words
+   - PARAGRAPH LENGTH: 150-200 words (increased for more context)
    - Difficulty: Around 考研英语一 level (doesn't need to be exactly the same, but similar)
-   - No word repetition (unless fixed collocation)
+   - Each answer word used ONLY ONCE (no repeated answers across blanks)
    - Include complex sentence structures
    - Use academic vocabulary and formal expressions
 
@@ -103,10 +106,14 @@ Article rules - CRITICAL WRITING STYLE:
 SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
 1. All collocations are natural?
 2. Grammar and part of speech match correctly?
-3. No word repetition (unless fixed collocation)?
-4. Correct answers are RANDOMLY distributed across A/B/C/D options?
-5. Non-考研 words are annotated with Chinese meanings?
-6. If ANY answer is NO → REWRITE immediately
+3. Each blank has a DIFFERENT answer (no repeated answers)?
+4. Each word used ONLY ONCE as an answer?
+5. Number of blanks ≈ Number of user's words?
+6. MAJORITY of answers from user's words?
+7. Paragraph length is 150-200 words?
+8. Correct answers are RANDOMLY distributed across A/B/C/D options?
+9. Non-考研 words are annotated with Chinese meanings?
+10. If ANY answer is NO → REWRITE immediately
 
 FORBIDDEN collocations (NEVER use):
 - knot + abstract concepts (e.g., "knot economic growth")
@@ -181,12 +188,23 @@ CRITICAL REQUIREMENTS:
 
 1. For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.
 
-2. VOCABULARY USAGE STRATEGY:
-   - Add approximately N/3 additional 考研-level words (where N = user's word count)
-   - Try to use ALL words from the total pool
+2. VOCABULARY USAGE STRATEGY - CRITICAL:
+   - Add approximately N/5 additional 考研-level words (where N = user's word count)
+   - Number of blanks ≈ N (差不多)
+   - Each blank's answer must be DIFFERENT
+   - Each word can ONLY be used ONCE as an answer
+   - MAJORITY of answers from user's words (大部分)
+   - SMALL PORTION of answers from your added words (小部分)
    - BUT: Natural collocations and grammar are MORE IMPORTANT
    - If a word doesn't fit naturally → Skip it and use another 考研 word
    - Never force unnatural usage
+   
+   Example: User gives 10 words
+   - Add 2 additional 考研 words
+   - Create about 10 blanks
+   - 8 answers from user's words (majority)
+   - 2 answers from your added words (small portion)
+   - Each answer is different
 
 3. BLANK DESIGN - Each blank must test one specific skill:
    - Collocation (e.g., "slim margin", "heed warnings", "foster innovation")

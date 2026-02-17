@@ -52,32 +52,27 @@ Format:
 
 CRITICAL REQUIREMENTS:
 
-1. Blank requirements: Create cloze gaps to help users memorize vocabulary through context.
-   - CRITICAL: Use a MAJORITY of the provided target words as cloze gaps (not all, but most)
-   - You may omit some words if they don't fit naturally
-   - Add approximately N/3 additional blanks using other 考研-level contextual vocabulary (where N = number of target words)
-   - NEVER repeat a vocabulary word unless it's part of a fixed collocation
-   - Each blank must test one of: collocation, logical connector, word meaning distinction, or grammar
-   
-   Example: If user provides 12 target words:
-   - Use 8-10 of them as gaps (majority)
-   - Add 3-4 additional gaps with other 考研 vocabulary (12/3 ≈ 4)
-   - Total: 11-14 blanks
+1. Blank requirements:
+   - Create blanks using words from the total pool (user words + your added words)
+   - Try to use ALL words, but natural usage is the priority
+   - If a word doesn't fit naturally, skip it and use another 考研 word
+   - Each blank must test: collocation, logical connector, word distinction, or grammar
 
-2. Option composition - EXTREMELY IMPORTANT: For each blank, the 4 options must include:
-   - CRITICAL: At least 2-3 words from the user's given words MUST appear in EVERY blank's 4 options
-   - This is MANDATORY to increase difficulty and prevent easy identification
-   - The correct answer (which may be from user's words or your additional words)
-   - The wrong options should be plausible distractors at postgraduate level with same part of speech
+2. Option composition - EXTREMELY IMPORTANT:
+   - Each blank has 4 options (A, B, C, D)
+   - CRITICAL: The correct answer must be RANDOMLY distributed across A/B/C/D options
+   - DO NOT always put the correct answer in position A
+   - For each blank, randomly assign which option (A/B/C/D) is correct
+   - At least 2-3 words from user's given words should appear in each blank's 4 options
+   - Wrong options should be plausible distractors with same part of speech
 
 3. Article content and structure:
    - Topic: Academic subjects like economics, technology, society, education, environment
-   - PARAGRAPH LENGTH: 80-120 words (sufficiently long to provide adequate context)
-   - Must be at postgraduate entrance examination difficulty (考研英语一)
-   - NEVER repeat a vocabulary word unless it's part of a fixed collocation
-   - Include complex sentence structures: subordinate clauses, participial phrases, inverted sentences, etc.
+   - Paragraph length: 80-120 words
+   - Difficulty: Around 考研英语一 level (doesn't need to be exactly the same, but similar)
+   - No word repetition (unless fixed collocation)
+   - Include complex sentence structures
    - Use academic vocabulary and formal expressions
-   - The content should be intellectually challenging and appropriate for postgraduate students
 
 4. Options detail:
    - For each option in each blank, provide:
@@ -106,16 +101,12 @@ Article rules - CRITICAL WRITING STYLE:
 - Vocabulary should be at postgraduate level (CET-6 and above, typical of 考研英语一阅读)
 
 SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
-1. No unnatural collocations or idiomatic expressions?
-2. Each word fits SEMANTICALLY (meaning matches context)?
-3. Each word fits GRAMMATICALLY (part of speech matches slot)?
-4. Common collocations are used correctly?
-5. No excessive repetition (each word used only once unless fixed collocation)?
-6. Passage reads like The Economist?
-7. Used a MAJORITY of target words as gaps (not all, but most)?
-8. Added approximately 1/3 of target word count as contextual vocabulary?
-9. Paragraph length is 80-120 words?
-10. If ANY answer is NO → REWRITE immediately
+1. All collocations are natural?
+2. Grammar and part of speech match correctly?
+3. No word repetition (unless fixed collocation)?
+4. Correct answers are RANDOMLY distributed across A/B/C/D options?
+5. Non-考研 words are annotated with Chinese meanings?
+6. If ANY answer is NO → REWRITE immediately
 
 FORBIDDEN collocations (NEVER use):
 - knot + abstract concepts (e.g., "knot economic growth")
@@ -191,16 +182,11 @@ CRITICAL REQUIREMENTS:
 1. For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.
 
 2. VOCABULARY USAGE STRATEGY:
-   - CLOZE GAPS: Use a MAJORITY of user-provided target words as gaps (not all, but most)
-   - CONTEXTUAL WORDS: Use approximately 1/3 of the target word count as additional 考研-level vocabulary
-   - NEVER repeat a vocabulary word unless it's part of a fixed collocation
-   - Each word should appear in natural, academic collocations
-   - The passage should read like an article from The Economist
-   
-   Example calculation for 12 target words:
-   - Gaps from target words: 8-10 words
-   - Additional contextual vocabulary: ~4 words (12/3)
-   - Paragraph length: 80-120 words
+   - Add approximately N/3 additional 考研-level words (where N = user's word count)
+   - Try to use ALL words from the total pool
+   - BUT: Natural collocations and grammar are MORE IMPORTANT
+   - If a word doesn't fit naturally → Skip it and use another 考研 word
+   - Never force unnatural usage
 
 3. BLANK DESIGN - Each blank must test one specific skill:
    - Collocation (e.g., "slim margin", "heed warnings", "foster innovation")
@@ -215,45 +201,26 @@ CRITICAL REQUIREMENTS:
    - Adjective blanks → use adjectives from target list
    - Check common collocations before finalizing
 
-4. WRITING STYLE - Use academic argumentative style for 考研英语一阅读:
-   - Topic: Economics, technology, society, education, or environment
-   - CRITICAL: Natural English is MORE IMPORTANT than using all user words
-   - ONLY use user words if they fit NATURALLY with correct collocations
-   - If a user word doesn't fit naturally, REPLACE it with other 考研-level vocabulary
-   - You may change word forms to fit context (e.g., analyze → analysis, enhance → enhancement)
-   - Avoid literary or metaphor-heavy writing (max ONE metaphor per paragraph)
-   - Follow logical structure: Topic sentence → explanation → reasoning/example → conclusion
+4. WRITING STYLE:
+   - Academic argumentative style (similar to 考研英语一)
+   - Natural English is MORE IMPORTANT than using all user words
+   - Only use words if they fit naturally with correct collocations
+   - If a word doesn't fit naturally → Skip it and use another 考研 word
+   - You may change word forms (e.g., analyze → analysis)
+   - Avoid overly literary writing (max ONE metaphor per paragraph)
+   - Follow logical structure: Topic sentence → explanation → reasoning → conclusion
 
-5. COLLOCATION RULES - EXTREMELY CRITICAL:
-   Every word must use NATURAL, COMMON collocations. Ask yourself: "Would a native academic writer say this?"
+5. ANNOTATION REQUIREMENT - CRITICAL:
+   - Any word that is NOT in the 考研 vocabulary list (beyond 5,500 words) MUST be annotated
+   - Format: word (中文释义) - e.g., sophisticated (复杂的)
+   - Only annotate content words that exceed 考研 level
+   - Keep annotations minimal
+
+6. COLLOCATION RULES:
+   Every word must use NATURAL collocations. If unsure → DON'T USE IT.
    
-   ✔ CORRECT collocations and idiomatic expressions:
-   - "heed early warnings" / "heed advice"
-   - "dismiss concerns" / "dismiss claims"
-   - "slim margin for error" / "profit margin"
-   - "choke economic growth" / "choke supply"
-   - "converge on a solution" / "opinions converge"
-   - "untie a knot" / "untie restrictions"
-   - "mitigate damage" / "mitigate risks"
-   - "foster innovation" / "foster growth"
-   - "bridge the gap" / "bridge differences"
-   - "at stake" / "in the wake of" / "by virtue of"
-   - "shed light on" / "give rise to" / "take into account"
-   
-   ❌ FORBIDDEN collocations (NEVER use these):
-   - "knot economic growth" / "knot innovation" (knot is not a verb for abstract concepts)
-   - "margin pressures" / "margin a rope" (margin is not a verb)
-   - "choke warning signs" / "choke concerns" (choke is for flow/supply, not emotions/ideas)
-   - "dismiss damage" / "dismiss a knot" (dismiss is for ideas, not physical objects)
-   - "converge warning signs" (converge doesn't take warnings as direct object)
-   
-   MANDATORY SELF-CHECK for EVERY sentence:
-   1. Is this a real collocation? (Check in your knowledge)
-   2. Would a native speaker say this? (Imagine reading it in The Economist)
-   3. Does grammar match word class? (noun as noun, verb as verb)
-   4. If ANY answer is NO → REWRITE immediately
-   
-   RULE: If you're unsure about a collocation, DON'T USE IT. Choose a different word or sentence structure. Natural English > Using all user words.`;
+   ✔ CORRECT: heed warnings, dismiss concerns, slim margin, choke growth, converge on solution
+   ❌ WRONG: knot innovation, margin pressures, choke concerns, dismiss damage Natural English > Using all user words.`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {

@@ -106,14 +106,16 @@ Article rules - CRITICAL WRITING STYLE:
 - Vocabulary should be at postgraduate level (CET-6 and above, typical of 考研英语一阅读)
 
 SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
-1. No unnatural collocations?
-2. No grammar mismatch (word class errors)?
-3. No excessive repetition (each word used only once unless fixed collocation)?
-4. Passage reads like The Economist?
-5. Used a MAJORITY of target words as gaps (not all, but most)?
-6. Added approximately 1/3 of target word count as contextual vocabulary?
-7. Paragraph length is 80-120 words?
-8. If ANY answer is NO → REWRITE immediately
+1. No unnatural collocations or idiomatic expressions?
+2. Each word fits SEMANTICALLY (meaning matches context)?
+3. Each word fits GRAMMATICALLY (part of speech matches slot)?
+4. Common collocations are used correctly?
+5. No excessive repetition (each word used only once unless fixed collocation)?
+6. Passage reads like The Economist?
+7. Used a MAJORITY of target words as gaps (not all, but most)?
+8. Added approximately 1/3 of target word count as contextual vocabulary?
+9. Paragraph length is 80-120 words?
+10. If ANY answer is NO → REWRITE immediately
 
 FORBIDDEN collocations (NEVER use):
 - knot + abstract concepts (e.g., "knot economic growth")
@@ -168,7 +170,10 @@ CRITICAL USAGE RULES:
 
 3. PARAGRAPH LENGTH: Generate a paragraph of 80-120 words to provide adequate context
 
-4. NATURAL USAGE:
+4. NATURAL USAGE - CRITICAL:
+   - Ensure chosen words fit the context both SEMANTICALLY and GRAMMATICALLY
+   - Match part of speech with the required slot (noun → noun slot, verb → verb slot)
+   - Pay CLOSE ATTENTION to common collocations and idiomatic expressions
    - NEVER repeat a vocabulary word unless it's part of a fixed collocation
    - Natural collocations are MORE IMPORTANT than using all user words
    - You may change word forms (e.g., analyze → analysis, enhance → enhanced)
@@ -199,9 +204,16 @@ CRITICAL REQUIREMENTS:
 
 3. BLANK DESIGN - Each blank must test one specific skill:
    - Collocation (e.g., "slim margin", "heed warnings", "foster innovation")
+   - Idiomatic expressions (e.g., "bridge the gap", "at stake", "in the wake of")
    - Logical connector (e.g., however, therefore, moreover)
    - Word meaning distinction (e.g., affect vs. effect, adapt vs. adopt)
    - Grammar (e.g., verb tense, preposition, article)
+   
+   CRITICAL: Ensure semantic and grammatical fit:
+   - Noun blanks → use nouns from target list
+   - Verb blanks → use verbs from target list
+   - Adjective blanks → use adjectives from target list
+   - Check common collocations before finalizing
 
 4. WRITING STYLE - Use academic argumentative style for 考研英语一阅读:
    - Topic: Economics, technology, society, education, or environment
@@ -215,7 +227,7 @@ CRITICAL REQUIREMENTS:
 5. COLLOCATION RULES - EXTREMELY CRITICAL:
    Every word must use NATURAL, COMMON collocations. Ask yourself: "Would a native academic writer say this?"
    
-   ✔ CORRECT collocations:
+   ✔ CORRECT collocations and idiomatic expressions:
    - "heed early warnings" / "heed advice"
    - "dismiss concerns" / "dismiss claims"
    - "slim margin for error" / "profit margin"
@@ -225,6 +237,8 @@ CRITICAL REQUIREMENTS:
    - "mitigate damage" / "mitigate risks"
    - "foster innovation" / "foster growth"
    - "bridge the gap" / "bridge differences"
+   - "at stake" / "in the wake of" / "by virtue of"
+   - "shed light on" / "give rise to" / "take into account"
    
    ❌ FORBIDDEN collocations (NEVER use these):
    - "knot economic growth" / "knot innovation" (knot is not a verb for abstract concepts)

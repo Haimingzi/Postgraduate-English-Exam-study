@@ -78,13 +78,16 @@ CRITICAL REQUIREMENTS:
    - Each passage: 40-80 words with 3 blanks
    - Total: 12 blanks
    
-2. BLANK REQUIREMENTS:
+2. BLANK REQUIREMENTS - CRITICAL:
+   - MANDATORY: You MUST use ALL user-provided words (每个我给的单词都要用上)
    - Each blank's answer must be DIFFERENT (no repeated answers)
-   - CRITICAL: Answer words must have DIFFERENT ROOT FORMS
+   - CRITICAL: Answer words must have DIFFERENT ROOT FORMS (词根不同)
      * "undo" and "undoing" → same root → CANNOT both be answers
      * "analyze" and "analysis" → same root → CANNOT both be answers
-   - MAJORITY of answers from user's words (大部分)
-   - SMALL PORTION from your added 考研 words (小部分)
+     * If user provides words with same root, use ONLY ONE of them
+   - NEVER repeat any word or its root form (不能出现重复使用的情况只要是它们词根一样都不行)
+   - You add approximately N/5 additional 考研 words
+   - Total blanks = All user words + additional words
    - Each blank must test: collocation, logical connector, word distinction, or grammar
 
 2. Option composition - EXTREMELY IMPORTANT:
@@ -162,15 +165,15 @@ SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
 5. Each passage's topic is based on the blank words in that passage (根据挖空词自行定主题)?
 6. Each passage is 40-80 words?
 7. Each passage has 3-4 blanks?
-8. Total blanks ≈ Number of user's words?
-9. Difficulty is equivalent to 考研英语一 level?
-10. ALL collocations are NATURAL (自然的)?
-11. ALL collocations are FORMAL and PROPER (正规的)?
-12. Every collocation would appear in academic journals or The Economist?
-13. Grammar and part of speech match correctly?
-14. Each blank has a DIFFERENT answer (no repeated answers)?
-15. Each answer word has a DIFFERENT ROOT FORM (no "undo" and "undoing" together)?
-16. MAJORITY of answers from user's words?
+8. Used ALL user-provided words (每个我给的单词都要用上)?
+9. Each blank has a DIFFERENT answer (no repeated answers)?
+10. Each answer word has a DIFFERENT ROOT FORM (不能出现重复使用的情况只要是它们词根一样都不行)?
+11. If user provided words with same root, used ONLY ONE of them?
+12. Difficulty is equivalent to 考研英语一 level?
+13. ALL collocations are NATURAL (自然的)?
+14. ALL collocations are FORMAL and PROPER (正规的)?
+15. Every collocation would appear in academic journals or The Economist?
+16. Grammar and part of speech match correctly?
 17. Correct answers are RANDOMLY distributed across A/B/C/D options?
 18. Non-考研 words are annotated with Chinese meanings?
 19. If ANY answer is NO → REWRITE immediately
@@ -250,27 +253,29 @@ CRITICAL REQUIREMENTS:
 
 2. MULTIPLE PASSAGES STRATEGY - CRITICAL:
    - Generate MULTIPLE short passages (NOT one long article)
+   - CRITICAL: Add MULTIPLE BLANK LINES (2-3 lines) between passages (空几行)
    - Number of passages ≈ Number of user's words ÷ 3 (约三分之一)
    - Each passage: 40-80 words with 3-4 blanks
    - Each passage has a numbered title
+   - MANDATORY: You MUST use ALL user-provided words (每个我给的单词都要用上)
    - Add approximately N/5 additional 考研-level words (where N = user's word count)
    - Each blank's answer must be DIFFERENT
    - CRITICAL: Answer words must have DIFFERENT ROOT FORMS (词根不同)
      * "undo" and "undoing" → same root → CANNOT both be answers
+     * If user provides words with same root, use ONLY ONE of them
      * Choose only ONE form of each root word as an answer
-   - MAJORITY of answers from user's words (大部分)
-   - SMALL PORTION from your added words (小部分)
-   - Natural collocations and grammar are MORE IMPORTANT
+   - NEVER repeat any word or its root form (不能出现重复使用的情况只要是它们词根一样都不行)
+   - Natural collocations and grammar are CRITICAL
    - DIFFICULTY: Must be equivalent to 考研英语一 level
    
    Example: User gives 12 words
+   - MUST use all 12 user words (mandatory)
    - Generate 4 passages (12 ÷ 3)
-   - Each passage: 40-80 words with 3 blanks
+   - Each passage: 40-80 words with 3-4 blanks
    - Add 2-3 additional 考研 words
-   - 10 answers from user's words (majority)
-   - 2 answers from your added words (small portion)
+   - Total: 14-15 blanks across 4 passages (12 user words + 2-3 additional)
    - Each answer has a different root form
-   - Total: 12 blanks across 4 passages
+   - Passages separated by 2-3 blank lines
 
 3. BLANK DESIGN - Each blank must test one specific skill:
    - Collocation (e.g., "slim margin", "heed warnings", "foster innovation")

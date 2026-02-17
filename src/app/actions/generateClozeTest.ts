@@ -29,7 +29,15 @@ CRITICAL: Output ONLY valid JSON. Do NOT wrap in markdown code blocks. Do NOT ad
 
 Format:
 {
-  "article": "Two or three coherent paragraphs of natural English (roughly 250–400 words). Use placeholders {{1}}, {{2}}, {{3}}, ... for each blank. The article must be at postgraduate entrance examination level, containing advanced grammar structures, complex sentence patterns, and academic vocabulary typical of postgraduate English tests.",
+  "article": "Multiple numbered short passages with titles. Each passage is 40-80 words. Use placeholders {{1}}, {{2}}, {{3}}, ... for each blank. Format example:
+
+1. Economic Growth
+The economy has shown {{1}} signs of recovery...
+
+2. Technological Innovation
+Recent advances in AI have {{2}} transformed...
+
+Each passage must be at postgraduate entrance examination level.",
   "options": {
     "1": ["correctWord", "wrong1", "wrong2", "wrong3"],
     "2": ["correctWord", "wrong1", "wrong2", "wrong3"],
@@ -52,17 +60,21 @@ Format:
 
 CRITICAL REQUIREMENTS:
 
-1. Blank requirements - CRITICAL:
-   - Number of blanks ≈ Number of user's words (差不多)
-   - Example: User gives 10 words → Create about 10 blanks
+1. PASSAGE STRUCTURE - CRITICAL:
+   - Generate MULTIPLE short passages (NOT one long article)
+   - Number of passages ≈ Number of user's words
+   - Each passage: 40-80 words
+   - Each passage has a numbered title (e.g., "1. Economic Growth")
+   - Each passage typically has 1-2 blanks
+   - Total blanks ≈ Number of user's words
+   
+2. BLANK REQUIREMENTS:
    - Each blank's answer must be DIFFERENT (no repeated answers)
    - CRITICAL: Answer words must have DIFFERENT ROOT FORMS
-     * "undo" and "undoing" have same root → CANNOT both be answers
-     * "analyze" and "analysis" have same root → CANNOT both be answers
-     * Only ONE form of each root word can be used as an answer
+     * "undo" and "undoing" → same root → CANNOT both be answers
+     * "analyze" and "analysis" → same root → CANNOT both be answers
    - MAJORITY of answers from user's words (大部分)
-   - SMALL PORTION of answers from your added 考研 words (小部分)
-   - Each word can ONLY be used ONCE as an answer
+   - SMALL PORTION from your added 考研 words (小部分)
    - Each blank must test: collocation, logical connector, word distinction, or grammar
 
 2. Option composition - EXTREMELY IMPORTANT:
@@ -73,13 +85,22 @@ CRITICAL REQUIREMENTS:
    - At least 2-3 words from user's given words should appear in each blank's 4 options
    - Wrong options should be plausible distractors with same part of speech
 
-3. Article content and structure:
-   - Topic: Academic subjects like economics, technology, society, education, environment
-   - PARAGRAPH LENGTH: 150-200 words (increased for more context)
-   - Difficulty: Around 考研英语一 level (doesn't need to be exactly the same, but similar)
-   - Each answer word used ONLY ONCE (no repeated answers across blanks)
+3. PASSAGE CONTENT AND STRUCTURE:
+   - Format: Multiple numbered short passages with titles
+   - Each passage: 40-80 words
+   - Topics: Economics, technology, society, education, environment, etc.
+   - Each passage focuses on ONE specific topic
+   - Difficulty: Around 考研英语一 level
+   - Each answer word used ONLY ONCE across ALL passages
    - Include complex sentence structures
    - Use academic vocabulary and formal expressions
+   
+   Example structure:
+   1. Climate Change
+   [40-80 words with 1-2 blanks]
+   
+   2. Digital Economy
+   [40-80 words with 1-2 blanks]
 
 4. Options detail:
    - For each option in each blank, provide:
@@ -108,17 +129,18 @@ Article rules - CRITICAL WRITING STYLE:
 - Vocabulary should be at postgraduate level (CET-6 and above, typical of 考研英语一阅读)
 
 SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
-1. All collocations are natural?
-2. Grammar and part of speech match correctly?
-3. Each blank has a DIFFERENT answer (no repeated answers)?
-4. Each answer word has a DIFFERENT ROOT FORM (no "undo" and "undoing" together)?
-5. Each word used ONLY ONCE as an answer?
-6. Number of blanks ≈ Number of user's words?
-7. MAJORITY of answers from user's words?
-8. Paragraph length is 150-200 words?
-9. Correct answers are RANDOMLY distributed across A/B/C/D options?
-10. Non-考研 words are annotated with Chinese meanings?
-11. If ANY answer is NO → REWRITE immediately
+1. Generated MULTIPLE short passages (NOT one long article)?
+2. Each passage has a numbered title (e.g., "1. Economic Growth")?
+3. Each passage is 40-80 words?
+4. Number of passages ≈ Number of user's words?
+5. All collocations are natural?
+6. Grammar and part of speech match correctly?
+7. Each blank has a DIFFERENT answer (no repeated answers)?
+8. Each answer word has a DIFFERENT ROOT FORM (no "undo" and "undoing" together)?
+9. MAJORITY of answers from user's words?
+10. Correct answers are RANDOMLY distributed across A/B/C/D options?
+11. Non-考研 words are annotated with Chinese meanings?
+12. If ANY answer is NO → REWRITE immediately
 
 FORBIDDEN collocations (NEVER use):
 - knot + abstract concepts (e.g., "knot economic growth")
@@ -193,24 +215,24 @@ CRITICAL REQUIREMENTS:
 
 1. For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.
 
-2. VOCABULARY USAGE STRATEGY - CRITICAL:
+2. MULTIPLE PASSAGES STRATEGY - CRITICAL:
+   - Generate MULTIPLE short passages (NOT one long article)
+   - Number of passages ≈ Number of user's words
+   - Each passage: 40-80 words with 1-2 blanks
+   - Each passage has a numbered title
    - Add approximately N/5 additional 考研-level words (where N = user's word count)
-   - Number of blanks ≈ N (差不多)
    - Each blank's answer must be DIFFERENT
    - CRITICAL: Answer words must have DIFFERENT ROOT FORMS (词根不同)
      * "undo" and "undoing" → same root → CANNOT both be answers
-     * "analyze" and "analysis" → same root → CANNOT both be answers
      * Choose only ONE form of each root word as an answer
-   - Each word can ONLY be used ONCE as an answer
    - MAJORITY of answers from user's words (大部分)
-   - SMALL PORTION of answers from your added words (小部分)
-   - BUT: Natural collocations and grammar are MORE IMPORTANT
-   - If a word doesn't fit naturally → Skip it and use another 考研 word
-   - Never force unnatural usage
+   - SMALL PORTION from your added words (小部分)
+   - Natural collocations and grammar are MORE IMPORTANT
    
    Example: User gives 10 words
+   - Generate about 10 short passages
+   - Each passage: 40-80 words with 1-2 blanks
    - Add 2 additional 考研 words
-   - Create about 10 blanks
    - 8 answers from user's words (majority)
    - 2 answers from your added words (small portion)
    - Each answer has a different root form

@@ -52,12 +52,17 @@ Format:
 
 CRITICAL REQUIREMENTS:
 
-1. Blank requirements: Create 8-12 blanks total to help users memorize vocabulary through context.
-   - If user provides N words, create at least N + ceil(N/2) blanks (e.g., 6 words → 9 blanks minimum)
-   - CRITICAL: Use ONLY 30-50% of user words (e.g., if user gives 10 words, use only 3-5 of them)
-   - The remaining blanks should use OTHER natural postgraduate-level vocabulary
+1. Blank requirements: Create cloze gaps to help users memorize vocabulary through context.
+   - CRITICAL: Use a MAJORITY of the provided target words as cloze gaps (not all, but most)
+   - You may omit some words if they don't fit naturally
+   - Add approximately N/3 additional blanks using other 考研-level contextual vocabulary (where N = number of target words)
    - NEVER repeat a vocabulary word unless it's part of a fixed collocation
    - Each blank must test one of: collocation, logical connector, word meaning distinction, or grammar
+   
+   Example: If user provides 12 target words:
+   - Use 8-10 of them as gaps (majority)
+   - Add 3-4 additional gaps with other 考研 vocabulary (12/3 ≈ 4)
+   - Total: 11-14 blanks
 
 2. Option composition - EXTREMELY IMPORTANT: For each blank, the 4 options must include:
    - CRITICAL: At least 2-3 words from the user's given words MUST appear in EVERY blank's 4 options
@@ -67,8 +72,9 @@ CRITICAL REQUIREMENTS:
 
 3. Article content and structure:
    - Topic: Academic subjects like economics, technology, society, education, environment
-   - Must be at postgraduate entrance examination difficulty
-   - CRITICAL: Important vocabulary should appear 2-3 times in DIFFERENT sentences to aid memorization
+   - PARAGRAPH LENGTH: 80-120 words (sufficiently long to provide adequate context)
+   - Must be at postgraduate entrance examination difficulty (考研英语一)
+   - NEVER repeat a vocabulary word unless it's part of a fixed collocation
    - Include complex sentence structures: subordinate clauses, participial phrases, inverted sentences, etc.
    - Use academic vocabulary and formal expressions
    - The content should be intellectually challenging and appropriate for postgraduate students
@@ -104,8 +110,10 @@ SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
 2. No grammar mismatch (word class errors)?
 3. No excessive repetition (each word used only once unless fixed collocation)?
 4. Passage reads like The Economist?
-5. Used only 30-50% of user words?
-6. If ANY answer is NO → REWRITE immediately
+5. Used a MAJORITY of target words as gaps (not all, but most)?
+6. Added approximately 1/3 of target word count as contextual vocabulary?
+7. Paragraph length is 80-120 words?
+8. If ANY answer is NO → REWRITE immediately
 
 FORBIDDEN collocations (NEVER use):
 - knot + abstract concepts (e.g., "knot economic growth")
@@ -145,16 +153,30 @@ function buildUserPrompt(words: string): string {
   if (list.length === 0) {
     return "Generate a short cloze paragraph with 1 blank.";
   }
-  return `Generate a cloze test using these ${list.length} word(s) as reference vocabulary.
+  return `Generate a cloze test using these ${list.length} word(s) as target vocabulary.
 
 CRITICAL USAGE RULES:
-1. Use ONLY 30-50% of the user-provided words in the passage
-2. The remaining blanks should use OTHER natural postgraduate-level vocabulary
-3. NEVER repeat a vocabulary word unless it's part of a fixed collocation
-4. Natural collocations are MORE IMPORTANT than using all user words
-5. You may change word forms (e.g., analyze → analysis, enhance → enhanced)
+1. CLOZE GAPS: Select a MAJORITY of the provided target words to create cloze gaps (blanks)
+   - Aim to use most of the provided words as gaps
+   - You may omit some words if they don't fit naturally or if better alternatives exist
+   - The correct answers for gaps should come from the provided target word list
 
-Example: If user provides 10 words, use only 3-5 of them, and create other blanks with different 考研-level words.
+2. CONTEXTUAL VOCABULARY: For all other words in the paragraph (surrounding context, not gaps):
+   - Use approximately 1/3 of the total number of target words as additional contextual vocabulary
+   - These contextual words should be at 考研英语一 vocabulary level
+   - Example: If user provides 12 target words, use about 4 additional contextual words (not from the list)
+
+3. PARAGRAPH LENGTH: Generate a paragraph of 80-120 words to provide adequate context
+
+4. NATURAL USAGE:
+   - NEVER repeat a vocabulary word unless it's part of a fixed collocation
+   - Natural collocations are MORE IMPORTANT than using all user words
+   - You may change word forms (e.g., analyze → analysis, enhance → enhanced)
+
+Example: If user provides 12 target words:
+- Use 8-10 of them as cloze gaps (majority)
+- Use about 4 additional 考研-level words for context
+- Total paragraph: 80-120 words
 
 IMPORTANT: These are the user's given words (case-insensitive):
 ${list.map((w) => `- ${w}`).join("\n")}
@@ -163,11 +185,17 @@ CRITICAL REQUIREMENTS:
 
 1. For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.
 
-2. VOCABULARY MEMORIZATION - Help users memorize words through natural context:
-   - Use ONLY 30-50% of user-provided words
+2. VOCABULARY USAGE STRATEGY:
+   - CLOZE GAPS: Use a MAJORITY of user-provided target words as gaps (not all, but most)
+   - CONTEXTUAL WORDS: Use approximately 1/3 of the target word count as additional 考研-level vocabulary
    - NEVER repeat a vocabulary word unless it's part of a fixed collocation
    - Each word should appear in natural, academic collocations
    - The passage should read like an article from The Economist
+   
+   Example calculation for 12 target words:
+   - Gaps from target words: 8-10 words
+   - Additional contextual vocabulary: ~4 words (12/3)
+   - Paragraph length: 80-120 words
 
 3. BLANK DESIGN - Each blank must test one specific skill:
    - Collocation (e.g., "slim margin", "heed warnings", "foster innovation")

@@ -5,29 +5,17 @@ import type { GenerateClozeResult, GenerateClozeJson, OptionDetail, WordAnnotati
 // DeepSeek OpenAI-compatible chat completions endpoint
 const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
 
-const SYSTEM_PROMPT = `You are a cloze test generator for Chinese postgraduate entrance exam (考研英语).
+const SYSTEM_PROMPT = `You are a passage generator for Chinese postgraduate entrance exam (考研英语).
 
 TASK:
-1. Write a passage (150-200 words) at 考研 difficulty level
-2. Use ALL the given words in the passage
-3. Replace these words with {{1}}, {{2}}, {{3}}, ... to create blanks
-4. Provide 4 options for each blank (one correct + three wrong)
-
-OUTPUT FORMAT (valid JSON only, no markdown):
-{
-  "article": "Passage with {{1}}, {{2}}, {{3}}, ...",
-  "options": {"1": ["correct", "wrong1", "wrong2", "wrong3"]},
-  "optionsDetail": {"1": [{"word": "word", "meaning": "中文", "phonetic": "/音标/", "partOfSpeech": "词性"}]},
-  "annotations": [{"word": "word", "meaning": "中文"}]
-}
+Write a passage (150-200 words) at 考研 difficulty level using ALL the given words.
 
 REQUIREMENTS:
 - Passage length: 150-200 words
 - Difficulty: 考研英语 level
 - Use ALL given words (must include every word)
-- Blank out these words with {{1}}, {{2}}, {{3}}, ...
 - Natural collocations and correct grammar
-- Each blank has 4 options with complete details`;
+- Output the passage directly (plain text, no JSON)`;
 
 function buildUserPrompt(words: string): string {
   const list = words
@@ -35,15 +23,15 @@ function buildUserPrompt(words: string): string {
     .split(/[\n,，\s]+/)
     .map((w) => w.trim())
     .filter(Boolean);
-  return `Generate a cloze test using these ${list.length} words:
+  return `Write a passage (150-200 words) at 考研 difficulty level using these ${list.length} words:
 
 ${list.map((w, i) => `${i + 1}. ${w}`).join("\n")}
 
-Remember:
-- Write a 150-200 word passage at 考研 difficulty
+Requirements:
 - Use ALL ${list.length} words in the passage
-- Blank out these words with {{1}}, {{2}}, {{3}}, ...
-- Provide 4 options for each blank`;
+- 150-200 words
+- 考研 difficulty level
+- Natural and fluent`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {
@@ -116,6 +104,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
+/* 暂时注释掉 - 先测试生成短文
 function parseAndValidate(jsonText: string): GenerateClozeJson {
   let parsed: unknown;
   let parseError: Error | null = null;
@@ -247,18 +236,20 @@ function toResultOptionsDetail(
   }
   return Object.keys(out).length > 0 ? out : undefined;
 }
+*/
 
 export async function generateClozeTest(words: string): Promise<GenerateClozeResult> {
   try {
     const userPrompt = buildUserPrompt(words);
-    const jsonText = await callDeepSeek(userPrompt);
-    const { article, options, optionsDetail, annotations } = parseAndValidate(jsonText);
+    const article = await callDeepSeek(userPrompt);
+    
+    // 暂时只返回文章，其他功能注释掉
     return {
       success: true,
-      article,
-      options: toResultOptions(options),
-      optionsDetail: toResultOptionsDetail(optionsDetail),
-      annotations,
+      article: article.trim(),
+      options: {}, // 暂时为空
+      optionsDetail: undefined,
+      annotations: undefined,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : "生成失败，请稍后重试。";

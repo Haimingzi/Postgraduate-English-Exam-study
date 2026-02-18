@@ -5,13 +5,29 @@ import type { GenerateClozeResult, GenerateClozeJson, OptionDetail, WordAnnotati
 // DeepSeek OpenAI-compatible chat completions endpoint
 const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
 
-const SYSTEM_PROMPT = `Generate a cloze test. Output ONLY valid JSON (no markdown):
+const SYSTEM_PROMPT = `You are a cloze test generator for Chinese postgraduate entrance exam (考研英语).
+
+TASK:
+1. Write a passage (150-200 words) at 考研 difficulty level
+2. Use ALL the given words in the passage
+3. Replace these words with {{1}}, {{2}}, {{3}}, ... to create blanks
+4. Provide 4 options for each blank (one correct + three wrong)
+
+OUTPUT FORMAT (valid JSON only, no markdown):
 {
-  "article": "Passage with {{1}}, {{2}}, {{3}}, ... as blanks",
-  "options": {"1": ["correctWord", "wrong1", "wrong2", "wrong3"]},
+  "article": "Passage with {{1}}, {{2}}, {{3}}, ...",
+  "options": {"1": ["correct", "wrong1", "wrong2", "wrong3"]},
   "optionsDetail": {"1": [{"word": "word", "meaning": "中文", "phonetic": "/音标/", "partOfSpeech": "词性"}]},
   "annotations": [{"word": "word", "meaning": "中文"}]
-}`;
+}
+
+REQUIREMENTS:
+- Passage length: 150-200 words
+- Difficulty: 考研英语 level
+- Use ALL given words (must include every word)
+- Blank out these words with {{1}}, {{2}}, {{3}}, ...
+- Natural collocations and correct grammar
+- Each blank has 4 options with complete details`;
 
 function buildUserPrompt(words: string): string {
   const list = words
@@ -19,7 +35,15 @@ function buildUserPrompt(words: string): string {
     .split(/[\n,，\s]+/)
     .map((w) => w.trim())
     .filter(Boolean);
-  return `Words: ${list.join(", ")}`;
+  return `Generate a cloze test using these ${list.length} words:
+
+${list.map((w, i) => `${i + 1}. ${w}`).join("\n")}
+
+Remember:
+- Write a 150-200 word passage at 考研 difficulty
+- Use ALL ${list.length} words in the passage
+- Blank out these words with {{1}}, {{2}}, {{3}}, ...
+- Provide 4 options for each blank`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {

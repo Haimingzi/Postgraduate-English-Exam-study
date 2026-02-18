@@ -29,9 +29,11 @@ CRITICAL: Output ONLY valid JSON. Do NOT wrap in markdown code blocks. Do NOT ad
 
 Format:
 {
-  "article": "ONE coherent passage of 150-250 words. Use placeholders {{1}}, {{2}}, {{3}}, ... for each blank. Topic can be anything. Difficulty should be natural English. Annotate non-考研 words with Chinese meaning in parentheses. Example:
+  "article": "ONE or TWO coherent passages (如果单词很难凑成一篇，可以做两篇). Each passage: 150-250 words. Use placeholders {{1}}, {{2}}, {{3}}, ... for each blank. Topic can be anything. Difficulty should be natural English. CRITICAL: All collocations must be correct and natural (词语搭配一定要正确合理符合常规). Annotate non-考研 words with Chinese meaning in parentheses. If generating two passages, separate them with a blank line. Example:
 
-The rapid development of technology has {{1}} our daily lives in countless ways. Modern smartphones (智能手机) allow us to {{2}} with people across the globe instantly...",
+The rapid development of technology has {{1}} our daily lives in countless ways. Modern smartphones (智能手机) allow us to {{2}} with people across the globe instantly...
+
+[If two passages] Second passage starts here...",
   "options": {
     "1": ["correctWord", "wrong1", "wrong2", "wrong3"],
     "2": ["correctWord", "wrong1", "wrong2", "wrong3"],
@@ -54,47 +56,53 @@ The rapid development of technology has {{1}} our daily lives in countless ways.
 
 CRITICAL REQUIREMENTS:
 
-1. PASSAGE STRUCTURE - SIMPLIFIED:
-   - Generate ONE coherent passage
-   - Length: 150-250 words
-   - Use all user-provided words as blanks
+1. PASSAGE STRUCTURE - FLEXIBLE:
+   - Generate ONE or TWO coherent passages (如果单词很难凑成一篇，可以做两篇)
+   - Each passage: 150-250 words
    - Topic: ANY subject (任意主题)
    - Difficulty: Natural English, doesn't need to be 考研 level
+   - If generating two passages, separate them with a blank line
    
    Example: User gives 10 words
-   - Generate 1 passage with 10 blanks
-   - 150-250 words total
+   - If words fit naturally: Generate 1 passage with blanks
+   - If words are hard to fit: Generate 2 passages with blanks
+   - Total: 150-250 words per passage
    
-2. BLANK REQUIREMENTS - SIMPLIFIED:
-   - MANDATORY: You MUST use ALL user-provided words (每个我给的单词都要用上)
-   - Each blank's answer must be DIFFERENT (no repeated answers)
-   - Answer words must have DIFFERENT ROOT FORMS (词根不同)
-     * "undo" and "undoing" → same root → CANNOT both be answers
-     * If user provides words with same root, use ONLY ONE of them
-   - NEVER repeat any word or its root form
+2. BLANK REQUIREMENTS - CRITICAL:
+   - COLLOCATION PRIORITY: Every blank's word collocation MUST be correct, reasonable, and natural (词语搭配一定要正确合理符合常规)
+   - MAJORITY of correct answers should be from user's words (大部分正确选项都要是我所给的那几个单词)
+   - If a user word doesn't fit naturally as a correct answer → Use it as a WRONG option instead (用在其他非正确选项上)
+   - If NO user word fits a blank naturally → Use another 考研 word as correct answer, and put unused user words as wrong options
+   - Each blank's CORRECT answer must be DIFFERENT (no repeated answers)
+   - CRITICAL: If word X is used as a correct answer in one blank, word X and ALL its forms CANNOT appear in ANY other blank (如果某一个空是单词1，那么其他空不得出现单词1及单词1的变形)
+     * Example: If blank 1 uses "analyze" → NO other blank can use "analyze", "analysis", "analytical", "analyzing", etc.
+     * Example: If blank 2 uses "enhanced" → NO other blank can use "enhance", "enhancement", "enhancing", etc.
    - Each blank should test natural usage in context
 
-2. Option composition - EXTREMELY IMPORTANT:
+2. Option composition - CRITICAL:
    - Each blank has 4 options (A, B, C, D)
    - CRITICAL: The correct answer must be RANDOMLY distributed across A/B/C/D options
    - DO NOT always put the correct answer in position A
    - For each blank, randomly assign which option (A/B/C/D) is correct
-   - At least 2-3 words from user's given words should appear in each blank's 4 options
-   - Wrong options should be plausible distractors with same part of speech
+   - IMPORTANT: Wrong options do NOT need to be similar in meaning (不一定要意思相近)
+   - If a user word doesn't fit as correct answer → Put it as a wrong option (直接硬塞进其他非正确选项)
+   - Unused user words should appear as wrong options in various blanks
+   - Wrong options should have same part of speech as the blank requires
 
-3. PASSAGE CONTENT - SIMPLIFIED:
-   - Format: ONE coherent passage
-   - Length: 150-250 words
+3. PASSAGE CONTENT - FLEXIBLE:
+   - Format: ONE or TWO coherent passages (如果单词很难凑成一篇，可以做两篇)
+   - Each passage: 150-250 words
    - Topic: ANY subject (任意主题) - can be about anything
    - Difficulty: Natural English, doesn't need to be 考研 level
-   - Use natural collocations and correct grammar
-   - Each answer word used ONLY ONCE
+   - CRITICAL: Use natural collocations and correct grammar (词语搭配一定要正确合理符合常规)
+   - Each correct answer word used ONLY ONCE (including all its forms)
    - ANNOTATION: Non-考研 words must be annotated with Chinese meaning in parentheses
    
    Example: User gives 10 words
-   Generate one passage about any topic (e.g., travel, technology, daily life, etc.)
-   [150-250 words with 10 blanks]
-   Non-考研 words annotated like: sophisticated (复杂的)
+   - If words fit naturally: Generate 1 passage
+   - If words are hard to fit: Generate 2 passages
+   - Each passage: 150-250 words
+   - Non-考研 words annotated like: sophisticated (复杂的)
 
 4. Options detail:
    - For each option in each blank, provide:
@@ -110,26 +118,24 @@ CRITICAL REQUIREMENTS:
    - These words will be displayed with their meanings in parentheses to help students
 
 Article rules - CRITICAL WRITING STYLE:
-- MUST be academic argumentative style, NOT literary or metaphor-heavy writing
-- Use NO MORE THAN ONE metaphor per paragraph
-- Follow clear logical structure: Topic sentence → explanation → reasoning/example → conclusion
-- CRITICAL: Every sentence must sound like it's from The Economist - professional, natural, and idiomatic
-- Use given vocabulary ONLY in NATURAL collocations - if a word cannot be used naturally, SKIP IT
-- NEVER force vocabulary usage - natural English is the top priority
+- COLLOCATION PRIORITY: Every word collocation MUST be correct, reasonable, and natural (词语搭配一定要正确合理符合常规)
+- Natural English is the HIGHEST priority
+- Use given vocabulary ONLY in NATURAL collocations - if a word cannot be used naturally as correct answer, use it as a wrong option instead
+- NEVER force vocabulary usage in unnatural collocations
 - You may change word forms (e.g., analyze → analysis, enhance → enhanced) to fit naturally
-- The text should be a complete coherent exposition with 2-3 paragraphs (250-400 words total)
+- Follow clear logical structure: Topic sentence → explanation → reasoning/example → conclusion
 - Distribute blanks across the whole article: avoid putting many blanks in the same sentence or next to each other
-- Use advanced grammar: complex sentences, passive voice, subjunctive mood, etc.
-- Vocabulary should be at postgraduate level (CET-6 and above, typical of 考研英语一阅读)
+- Use natural grammar and sentence structures
+- If user's words are hard to fit in one passage, generate TWO passages instead (如果单词很难凑成一篇，可以做两篇)
 
 SELF-CHECK REQUIREMENT (run this check BEFORE finalizing):
-1. Generated ONE coherent passage (not multiple passages)?
-2. Passage length is 150-250 words?
-3. Used ALL user-provided words (每个我给的单词都要用上)?
-4. Each blank has a DIFFERENT answer (no repeated answers)?
-5. Each answer word has a DIFFERENT ROOT FORM (词根不同)?
-6. If user provided words with same root, used ONLY ONE of them?
-7. All collocations are natural?
+1. Generated ONE or TWO coherent passages (如果单词很难凑成一篇，做了两篇)?
+2. Each passage length is 150-250 words?
+3. ALL collocations are correct, reasonable, and natural (词语搭配一定要正确合理符合常规)?
+4. MAJORITY of correct answers are from user's words (大部分正确选项都是用户给的单词)?
+5. Unused user words appear as wrong options (用不上的词作为非正确选项)?
+6. Each blank has a DIFFERENT correct answer (no repeated answers)?
+7. If word X is a correct answer, NO other blank uses word X or its forms (如果某一个空是单词1，其他空不得出现单词1及单词1的变形)?
 8. Grammar is correct?
 9. Correct answers are RANDOMLY distributed across A/B/C/D options?
 10. Non-考研 words are annotated with Chinese meanings in parentheses?
@@ -208,26 +214,27 @@ CRITICAL REQUIREMENTS:
 
 1. For EVERY blank, at least 2-3 words from the above user-given word list MUST appear in the 4 options. This is EXTREMELY IMPORTANT to prevent users from easily identifying the correct answer by spotting which option is from their word list. Mix user's words throughout all blanks to maximize difficulty.
 
-2. SINGLE PASSAGE STRATEGY - SIMPLIFIED:
-   - Generate ONE coherent passage
-   - Length: 150-250 words
+2. FLEXIBLE PASSAGE STRATEGY - CRITICAL:
+   - Generate ONE or TWO coherent passages (如果单词很难凑成一篇，可以做两篇)
+   - Each passage: 150-250 words
    - Topic: ANY subject (任意主题)
-   - MANDATORY: You MUST use ALL user-provided words (每个我给的单词都要用上)
-   - Each blank's answer must be DIFFERENT
-   - Answer words must have DIFFERENT ROOT FORMS (词根不同)
-     * "undo" and "undoing" → same root → CANNOT both be answers
-     * If user provides words with same root, use ONLY ONE of them
-   - NEVER repeat any word or its root form
+   - COLLOCATION PRIORITY: Every word collocation MUST be correct, reasonable, and natural (词语搭配一定要正确合理符合常规)
+   - MAJORITY of correct answers should be from user's words (大部分正确选项都要是用户给的单词)
+   - If a user word doesn't fit naturally as correct answer → Use it as a WRONG option (用在其他非正确选项上)
+   - If NO user word fits a blank → Use another 考研 word as correct answer
+   - Unused user words should appear as wrong options (最后没有用到的单词直接作为非正确选项出现)
+   - CRITICAL: If word X is a correct answer, NO other blank can use word X or its forms (如果某一个空是单词1，其他空不得出现单词1及单词1的变形)
+     * Example: If blank 1 uses "analyze" → NO other blank can use "analyze", "analysis", "analytical", etc.
    - Use natural collocations and correct grammar
    - Difficulty: Natural English, doesn't need to be 考研 level
    - ANNOTATION: Non-考研 words must be annotated with Chinese meaning in parentheses
    
    Example: User gives 10 words
-   - MUST use all 10 user words (mandatory)
-   - Generate 1 passage with 10 blanks
-   - 150-250 words total
-   - Topic can be anything
-   - Each answer has a different root form
+   - Try to use most as correct answers (e.g., 7-8 words)
+   - If some words don't fit naturally → Use them as wrong options
+   - Generate 1 passage (or 2 if words are hard to fit)
+   - Each passage: 150-250 words
+   - Each correct answer word used ONLY ONCE (including all its forms)
    - Non-考研 words annotated: word (中文释义)
 
 3. BLANK DESIGN - Each blank must test one specific skill:
@@ -258,22 +265,26 @@ CRITICAL REQUIREMENTS:
    - Only annotate content words that exceed 考研 level
    - Keep annotations minimal
 
-5. COLLOCATION RULES - SIMPLIFIED:
-   Use natural collocations and correct grammar.
+5. COLLOCATION RULES - HIGHEST PRIORITY:
+   CRITICAL: Every word collocation MUST be correct, reasonable, and natural (词语搭配一定要正确合理符合常规)
    
    ✔ CORRECT collocations:
    - heed warnings / heed advice
    - dismiss concerns / dismiss claims
    - slim margin / profit margin
    - foster innovation / foster growth
+   - enhance performance / enhance quality
+   - analyze data / analyze results
    
-   ❌ WRONG collocations:
+   ❌ WRONG collocations (NEVER use):
    - knot innovation (unnatural)
    - margin pressures (wrong)
    - choke concerns (wrong)
    - dismiss damage (wrong)
    
-   Rule: Use natural English that sounds correct Natural English > Using all user words.`;
+   CRITICAL RULE: Natural collocations > Using all user words as correct answers
+   - If a user word doesn't fit naturally → Use it as a wrong option instead
+   - NEVER force unnatural collocations`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {

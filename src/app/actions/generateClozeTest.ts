@@ -5,53 +5,25 @@ import type { GenerateClozeResult, GenerateClozeJson, OptionDetail, WordAnnotati
 // DeepSeek OpenAI-compatible chat completions endpoint
 const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
 
-const SYSTEM_PROMPT = `You are a cloze test generator for English vocabulary learning at Chinese postgraduate entrance examination (考研) level.
+const SYSTEM_PROMPT = `You are a cloze test generator.
 
-🚨 CRITICAL TASK 🚨
-1. Generate a complete passage at 考研 difficulty level
-2. The passage MUST include ALL user's given words (文章一定要包含所有我所给的单词)
-3. Then blank out ALL these words to create a cloze test (把它们全部挖空)
+Generate a passage using the user's given words, then blank them out.
 
-If user gives 10 words → passage must include all 10 words → create 10 blanks
-
-OUTPUT FORMAT:
-Output ONLY valid JSON. Do NOT wrap in markdown code blocks. Start directly with { and end with }.
-
+Output ONLY valid JSON (no markdown):
 {
   "article": "Passage with {{1}}, {{2}}, {{3}}, ... as blanks",
   "options": {
-    "1": ["correctWord", "wrong1", "wrong2", "wrong3"],
-    "2": ["correctWord", "wrong1", "wrong2", "wrong3"]
+    "1": ["correctWord", "wrong1", "wrong2", "wrong3"]
   },
   "optionsDetail": {
     "1": [
-      {"word": "correctWord", "meaning": "中文释义", "phonetic": "/音标/", "partOfSpeech": "词性"},
-      {"word": "wrong1", "meaning": "中文释义", "phonetic": "/音标/", "partOfSpeech": "词性"},
-      {"word": "wrong2", "meaning": "中文释义", "phonetic": "/音标/", "partOfSpeech": "词性"},
-      {"word": "wrong3", "meaning": "中文释义", "phonetic": "/音标/", "partOfSpeech": "词性"}
+      {"word": "correctWord", "meaning": "中文", "phonetic": "/音标/", "partOfSpeech": "词性"}
     ]
   },
   "annotations": [
-    {"word": "nonKaoyanWord", "meaning": "中文释义"}
+    {"word": "word", "meaning": "中文"}
   ]
 }
-
-REQUIREMENTS:
-1. Passage difficulty: 考研英语 level
-2. Passage length: 150-250 words
-3. CRITICAL: The passage MUST include ALL user's given words (文章一定要包含所有我所给的单词)
-4. Use the user's given words naturally in the passage
-5. CRITICAL: Blank out ALL the user's given words with {{1}}, {{2}}, {{3}}, ... (把它们全部挖空)
-6. Each blank's correct answer MUST be one of the user's given words
-7. Each blank has 4 options (A, B, C, D)
-8. Correct answer should be randomly distributed across A/B/C/D
-9. For each option, provide: word, meaning, phonetic, partOfSpeech
-10. Annotate any non-考研 words with Chinese meaning
-
-JSON rules:
-- options[n][0] is the correct word
-- Output ONLY valid JSON, parseable by JSON.parse()
-- No markdown formatting, no comments, no trailing commas
 `;
 
 function buildUserPrompt(words: string): string {
@@ -63,32 +35,14 @@ function buildUserPrompt(words: string): string {
   if (list.length === 0) {
     return "Generate a short cloze paragraph with 1 blank.";
   }
-  return `Generate a cloze test using these ${list.length} word(s).
+  return `Generate a cloze test using these ${list.length} word(s):
 
-User's given words:
 ${list.map((w) => `- ${w}`).join("\n")}
 
-INSTRUCTIONS:
-1. Write a complete passage (150-250 words) at 考研 difficulty level
-2. CRITICAL: The passage MUST include ALL user's given words (文章一定要包含所有我所给的单词)
-3. Use the user's given words naturally in the passage
-4. CRITICAL: Blank out ALL the user's given words with {{1}}, {{2}}, {{3}}, ... (把它们全部挖空)
-5. Each blank's correct answer MUST be one of the user's given words
-6. Create 4 options for each blank (correct answer first, then 3 wrong options)
-7. Provide complete details for each option: word, meaning, phonetic, partOfSpeech
-8. Annotate any non-考研 words
-
-Example:
-User gives: analyze, enhance, facilitate
-✅ CORRECT: Passage MUST include ALL 3 words
-Passage: "Technology has enhanced our ability to analyze data, which facilitates better decisions."
-Blanks: "Technology has {{1}} our ability to {{2}} data, which {{3}} better decisions."
-Correct answers: {{1}}=enhanced, {{2}}=analyze, {{3}}=facilitates
-
-❌ WRONG: Missing any user word
-Passage: "Technology has enhanced our ability to process data." (missing "analyze" and "facilitate")
-
-Output ONLY valid JSON.
+1. Write a passage using these words
+2. Blank out these words with {{1}}, {{2}}, {{3}}, ...
+3. Provide 4 options for each blank
+4. Output valid JSON
 `;
 }
 

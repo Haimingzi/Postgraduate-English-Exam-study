@@ -7,9 +7,12 @@ const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
 
 const SYSTEM_PROMPT = `You are a cloze test generator for English vocabulary learning at Chinese postgraduate entrance examination (考研) level.
 
-TASK:
-1. Generate a complete passage at 考研 difficulty level using the user's given words
-2. Then blank out the user's given words to create a cloze test
+🚨 CRITICAL TASK 🚨
+1. Generate a complete passage at 考研 difficulty level
+2. The passage MUST include ALL user's given words (文章一定要包含所有我所给的单词)
+3. Then blank out ALL these words to create a cloze test (把它们全部挖空)
+
+If user gives 10 words → passage must include all 10 words → create 10 blanks
 
 OUTPUT FORMAT:
 Output ONLY valid JSON. Do NOT wrap in markdown code blocks. Start directly with { and end with }.
@@ -36,13 +39,14 @@ Output ONLY valid JSON. Do NOT wrap in markdown code blocks. Start directly with
 REQUIREMENTS:
 1. Passage difficulty: 考研英语 level
 2. Passage length: 150-250 words
-3. Use the user's given words naturally in the passage
-4. CRITICAL: Blank out ONLY the user's given words with {{1}}, {{2}}, {{3}}, ... (挖空单词为我所给的单词)
-5. Each blank's correct answer MUST be one of the user's given words
-6. Each blank has 4 options (A, B, C, D)
-7. Correct answer should be randomly distributed across A/B/C/D
-8. For each option, provide: word, meaning, phonetic, partOfSpeech
-9. Annotate any non-考研 words with Chinese meaning
+3. CRITICAL: The passage MUST include ALL user's given words (文章一定要包含所有我所给的单词)
+4. Use the user's given words naturally in the passage
+5. CRITICAL: Blank out ALL the user's given words with {{1}}, {{2}}, {{3}}, ... (把它们全部挖空)
+6. Each blank's correct answer MUST be one of the user's given words
+7. Each blank has 4 options (A, B, C, D)
+8. Correct answer should be randomly distributed across A/B/C/D
+9. For each option, provide: word, meaning, phonetic, partOfSpeech
+10. Annotate any non-考研 words with Chinese meaning
 
 JSON rules:
 - options[n][0] is the correct word
@@ -66,18 +70,23 @@ ${list.map((w) => `- ${w}`).join("\n")}
 
 INSTRUCTIONS:
 1. Write a complete passage (150-250 words) at 考研 difficulty level
-2. Use the user's given words naturally in the passage
-3. CRITICAL: Blank out ONLY the user's given words with {{1}}, {{2}}, {{3}}, ... (挖空单词为我所给的单词)
-4. Each blank's correct answer MUST be one of the user's given words
-5. Create 4 options for each blank (correct answer first, then 3 wrong options)
-6. Provide complete details for each option: word, meaning, phonetic, partOfSpeech
-7. Annotate any non-考研 words
+2. CRITICAL: The passage MUST include ALL user's given words (文章一定要包含所有我所给的单词)
+3. Use the user's given words naturally in the passage
+4. CRITICAL: Blank out ALL the user's given words with {{1}}, {{2}}, {{3}}, ... (把它们全部挖空)
+5. Each blank's correct answer MUST be one of the user's given words
+6. Create 4 options for each blank (correct answer first, then 3 wrong options)
+7. Provide complete details for each option: word, meaning, phonetic, partOfSpeech
+8. Annotate any non-考研 words
 
 Example:
 User gives: analyze, enhance, facilitate
+✅ CORRECT: Passage MUST include ALL 3 words
 Passage: "Technology has enhanced our ability to analyze data, which facilitates better decisions."
 Blanks: "Technology has {{1}} our ability to {{2}} data, which {{3}} better decisions."
 Correct answers: {{1}}=enhanced, {{2}}=analyze, {{3}}=facilitates
+
+❌ WRONG: Missing any user word
+Passage: "Technology has enhanced our ability to process data." (missing "analyze" and "facilitate")
 
 Output ONLY valid JSON.
 `;

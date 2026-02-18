@@ -37,11 +37,12 @@ REQUIREMENTS:
 1. Passage difficulty: 考研英语 level
 2. Passage length: 150-250 words
 3. Use the user's given words naturally in the passage
-4. Then blank out these words with {{1}}, {{2}}, {{3}}, ...
-5. Each blank has 4 options (A, B, C, D)
-6. Correct answer should be randomly distributed across A/B/C/D
-7. For each option, provide: word, meaning, phonetic, partOfSpeech
-8. Annotate any non-考研 words with Chinese meaning
+4. CRITICAL: Blank out ONLY the user's given words with {{1}}, {{2}}, {{3}}, ... (挖空单词为我所给的单词)
+5. Each blank's correct answer MUST be one of the user's given words
+6. Each blank has 4 options (A, B, C, D)
+7. Correct answer should be randomly distributed across A/B/C/D
+8. For each option, provide: word, meaning, phonetic, partOfSpeech
+9. Annotate any non-考研 words with Chinese meaning
 
 JSON rules:
 - options[n][0] is the correct word
@@ -66,10 +67,17 @@ ${list.map((w) => `- ${w}`).join("\n")}
 INSTRUCTIONS:
 1. Write a complete passage (150-250 words) at 考研 difficulty level
 2. Use the user's given words naturally in the passage
-3. Then blank out these words with {{1}}, {{2}}, {{3}}, ... to create the cloze test
-4. Create 4 options for each blank (correct answer first, then 3 wrong options)
-5. Provide complete details for each option: word, meaning, phonetic, partOfSpeech
-6. Annotate any non-考研 words
+3. CRITICAL: Blank out ONLY the user's given words with {{1}}, {{2}}, {{3}}, ... (挖空单词为我所给的单词)
+4. Each blank's correct answer MUST be one of the user's given words
+5. Create 4 options for each blank (correct answer first, then 3 wrong options)
+6. Provide complete details for each option: word, meaning, phonetic, partOfSpeech
+7. Annotate any non-考研 words
+
+Example:
+User gives: analyze, enhance, facilitate
+Passage: "Technology has enhanced our ability to analyze data, which facilitates better decisions."
+Blanks: "Technology has {{1}} our ability to {{2}} data, which {{3}} better decisions."
+Correct answers: {{1}}=enhanced, {{2}}=analyze, {{3}}=facilitates
 
 Output ONLY valid JSON.
 `;

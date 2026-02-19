@@ -8,10 +8,10 @@ const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
 const SYSTEM_PROMPT = `You are a passage generator for Chinese postgraduate entrance exam (考研英语).
 
 TASK:
-Write a passage (150-200 words) at 考研 difficulty level using ALL the given words.
+Write a passage (around 150 words) at 考研 difficulty level using ALL the given words.
 
 REQUIREMENTS:
-- Passage length: 150-200 words
+- Passage length: around 150 words (140-160 words is acceptable)
 - Difficulty: 考研英语 level
 - Use ALL given words (must include every word)
 - Mark the given words with **word** (bold format)
@@ -28,7 +28,7 @@ function buildUserPrompt(words: string): string {
     .split(/[\n,，\s]+/)
     .map((w) => w.trim())
     .filter(Boolean);
-  return `Write a passage (150-200 words) at 考研 difficulty level using these ${list.length} words:
+  return `Write a passage (around 150 words) at 考研 difficulty level using these ${list.length} words:
 
 ${list.map((w, i) => `${i + 1}. ${w}`).join("\n")}
 
@@ -36,7 +36,7 @@ Requirements:
 - Use ALL ${list.length} words in the passage
 - Mark these words with **word** (bold format) in the passage
 - For non-考研 words (difficult/uncommon words), add Chinese meaning in parentheses: word(中文)
-- 150-200 words
+- Around 150 words (140-160 words is acceptable)
 - 考研 difficulty level
 - Natural and fluent`;
 }

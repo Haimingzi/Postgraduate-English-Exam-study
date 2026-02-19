@@ -15,8 +15,12 @@ REQUIREMENTS:
 - Difficulty: 考研英语 level
 - Use ALL given words (must include every word)
 - Mark the given words with **word** (bold format)
+- For non-考研 words (difficult/uncommon words), add Chinese meaning in parentheses: word(中文)
 - Natural collocations and correct grammar
-- Output the passage directly (plain text, no JSON)`;
+- Output the passage directly (plain text, no JSON)
+
+EXAMPLE:
+"Technology has **enhanced** our ability to **analyze** data, which facilitates(促进) better decisions in the pharmaceutical(制药的) industry."`;
 
 function buildUserPrompt(words: string): string {
   const list = words
@@ -31,6 +35,7 @@ ${list.map((w, i) => `${i + 1}. ${w}`).join("\n")}
 Requirements:
 - Use ALL ${list.length} words in the passage
 - Mark these words with **word** (bold format) in the passage
+- For non-考研 words (difficult/uncommon words), add Chinese meaning in parentheses: word(中文)
 - 150-200 words
 - 考研 difficulty level
 - Natural and fluent`;

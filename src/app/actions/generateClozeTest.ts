@@ -5,32 +5,18 @@ import type { GenerateClozeResult, GenerateClozeJson, OptionDetail, WordAnnotati
 // DeepSeek OpenAI-compatible chat completions endpoint
 const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
 
-const SYSTEM_PROMPT = `You are a cloze test generator for Chinese postgraduate entrance exam (考研英语).
+const SYSTEM_PROMPT = `You are a passage generator for Chinese postgraduate entrance exam (考研英语).
 
 TASK:
-1. Write a passage (150-200 words) at 考研 difficulty level
-2. Use ALL the given words in the passage
-3. CRITICAL: Each word can appear ONLY ONCE in the passage (不允许同一词在一篇出现超过 1 次)
-4. If you need to use a word again, use a synonym instead (自动替换同义词)
-5. Replace the given words with {{1}}, {{2}}, {{3}}, ... to create blanks
-6. Provide 4 options for each blank
-
-OUTPUT FORMAT (valid JSON only, no markdown):
-{
-  "article": "Passage with {{1}}, {{2}}, {{3}}, ...",
-  "options": {"1": ["correct", "wrong1", "wrong2", "wrong3"]},
-  "optionsDetail": {"1": [{"word": "word", "meaning": "中文", "phonetic": "/音标/", "partOfSpeech": "词性"}]},
-  "annotations": [{"word": "word", "meaning": "中文"}]
-}
+Write a passage (150-200 words) at 考研 difficulty level using ALL the given words.
 
 REQUIREMENTS:
 - Passage length: 150-200 words
 - Difficulty: 考研英语 level
 - Use ALL given words (must include every word)
-- CRITICAL: Each word appears ONLY ONCE (不允许同一词在一篇出现超过 1 次)
-- If need to repeat, use synonyms (自动替换同义词)
-- Blank out the given words with {{1}}, {{2}}, {{3}}, ...
-- Natural collocations and correct grammar`;
+- Mark the given words with **word** (bold format)
+- Natural collocations and correct grammar
+- Output the passage directly (plain text, no JSON)`;
 
 function buildUserPrompt(words: string): string {
   const list = words
@@ -38,17 +24,16 @@ function buildUserPrompt(words: string): string {
     .split(/[\n,，\s]+/)
     .map((w) => w.trim())
     .filter(Boolean);
-  return `Generate a cloze test using these ${list.length} words:
+  return `Write a passage (150-200 words) at 考研 difficulty level using these ${list.length} words:
 
 ${list.map((w, i) => `${i + 1}. ${w}`).join("\n")}
 
-CRITICAL REQUIREMENTS:
-- Write a 150-200 word passage at 考研 difficulty
+Requirements:
 - Use ALL ${list.length} words in the passage
-- Each word can appear ONLY ONCE (不允许同一词在一篇出现超过 1 次)
-- If you need to use a word again, use a synonym instead (自动替换同义词)
-- Blank out these ${list.length} words with {{1}}, {{2}}, {{3}}, ...
-- Provide 4 options for each blank`;
+- Mark these words with **word** (bold format) in the passage
+- 150-200 words
+- 考研 difficulty level
+- Natural and fluent`;
 }
 
 async function callDeepSeek(userPrompt: string): Promise<string> {
@@ -98,9 +83,6 @@ async function callDeepSeek(userPrompt: string): Promise<string> {
       throw new Error("API 返回内容为空，请重试。");
     }
     
-    // Remove markdown code blocks if present
-    text = text.replace(/^```(?:json)?\s*/gm, "").replace(/```\s*$/gm, "").trim();
-    
     return text;
   } catch (err) {
     clearTimeout(timeoutId);
@@ -111,159 +93,18 @@ async function callDeepSeek(userPrompt: string): Promise<string> {
   }
 }
 
-// 随机打乱数组
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
-
-function parseAndValidate(jsonText: string): GenerateClozeJson {
-  let parsed: unknown;
-  let parseError: Error | null = null;
-  try {
-    parsed = JSON.parse(jsonText);
-  } catch (err) {
-    parseError = err instanceof Error ? err : new Error(String(err));
-    // Try to extract JSON from the text if it's wrapped in other content
-    const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      try {
-        parsed = JSON.parse(jsonMatch[0]);
-        parseError = null;
-      } catch {
-        // If still fails, use original error
-      }
-    }
-    if (parseError) {
-      const errorMsg = parseError.message || "未知错误";
-      const preview = jsonText.slice(0, 200);
-      throw new Error(`API 返回格式无效: ${errorMsg}。返回内容预览: ${preview}...`);
-    }
-  }
-  if (!parsed || typeof parsed !== "object" || !("article" in parsed) || !("options" in parsed)) {
-    throw new Error("API 返回缺少 article 或 options。");
-  }
-  const obj = parsed as Record<string, unknown>;
-  const article = obj.article;
-  const options = obj.options;
-  if (typeof article !== "string" || !article.trim()) {
-    throw new Error("article 必须为非空字符串。");
-  }
-  if (!options || typeof options !== "object" || Array.isArray(options)) {
-    throw new Error("options 必须为对象。");
-  }
-  const optionsOut: Record<string, [string, string, string, string]> = {};
-  for (const [key, value] of Object.entries(options)) {
-    if (!Array.isArray(value) || value.length !== 4) {
-      throw new Error(`options["${key}"] 必须为 4 个字符串的数组。`);
-    }
-    // 随机打乱选项顺序，让正确答案不总是第一个
-    const shuffled = shuffleArray(value.every((v) => typeof v === "string") ? value : value.map(String));
-    optionsOut[String(key)] = shuffled as [string, string, string, string];
-  }
-
-  // Parse optionsDetail if present
-  let optionsDetailOut: Record<string, [OptionDetail, OptionDetail, OptionDetail, OptionDetail]> | undefined;
-  if ("optionsDetail" in obj && obj.optionsDetail) {
-    const optionsDetail = obj.optionsDetail;
-    if (typeof optionsDetail === "object" && !Array.isArray(optionsDetail)) {
-      optionsDetailOut = {};
-      for (const [key, value] of Object.entries(optionsDetail)) {
-        if (!Array.isArray(value) || value.length !== 4) {
-          continue; // Skip invalid entries
-        }
-        const detailArray: OptionDetail[] = [];
-        for (const item of value) {
-          if (typeof item === "object" && item !== null && "word" in item && "meaning" in item && "phonetic" in item) {
-            detailArray.push({
-              word: String(item.word),
-              meaning: String(item.meaning),
-              phonetic: String(item.phonetic),
-              partOfSpeech: "partOfSpeech" in item ? String(item.partOfSpeech) : undefined,
-            });
-          }
-        }
-        if (detailArray.length === 4) {
-          // 根据打乱后的选项顺序重新排列详情
-          const shuffledOptions = optionsOut[String(key)];
-          if (shuffledOptions) {
-            const reorderedDetails: OptionDetail[] = [];
-            for (const word of shuffledOptions) {
-              const detail = detailArray.find(d => d.word === word);
-              if (detail) {
-                reorderedDetails.push(detail);
-              }
-            }
-            if (reorderedDetails.length === 4) {
-              optionsDetailOut[String(key)] = reorderedDetails as [OptionDetail, OptionDetail, OptionDetail, OptionDetail];
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Parse annotations if present
-  let annotationsOut: WordAnnotation[] | undefined;
-  if ("annotations" in obj && obj.annotations) {
-    const annotations = obj.annotations;
-    if (Array.isArray(annotations)) {
-      annotationsOut = [];
-      for (const item of annotations) {
-        if (typeof item === "object" && item !== null && "word" in item && "meaning" in item) {
-          annotationsOut.push({
-            word: String(item.word),
-            meaning: String(item.meaning),
-          });
-        }
-      }
-      if (annotationsOut.length === 0) {
-        annotationsOut = undefined;
-      }
-    }
-  }
-
-  return { article: article.trim(), options: optionsOut, optionsDetail: optionsDetailOut, annotations: annotationsOut };
-}
-
-function toResultOptions(
-  options: Record<string, [string, string, string, string]>
-): Record<number, [string, string, string, string]> {
-  const out: Record<number, [string, string, string, string]> = {};
-  for (const [k, v] of Object.entries(options)) {
-    const n = parseInt(k, 10);
-    if (Number.isInteger(n) && n >= 1) out[n] = v;
-  }
-  return out;
-}
-
-function toResultOptionsDetail(
-  optionsDetail: Record<string, [OptionDetail, OptionDetail, OptionDetail, OptionDetail]> | undefined
-): Record<number, [OptionDetail, OptionDetail, OptionDetail, OptionDetail]> | undefined {
-  if (!optionsDetail) return undefined;
-  const out: Record<number, [OptionDetail, OptionDetail, OptionDetail, OptionDetail]> = {};
-  for (const [k, v] of Object.entries(optionsDetail)) {
-    const n = parseInt(k, 10);
-    if (Number.isInteger(n) && n >= 1) out[n] = v;
-  }
-  return Object.keys(out).length > 0 ? out : undefined;
-}
-
 export async function generateClozeTest(words: string): Promise<GenerateClozeResult> {
   try {
     const userPrompt = buildUserPrompt(words);
-    const jsonText = await callDeepSeek(userPrompt);
-    const { article, options, optionsDetail, annotations } = parseAndValidate(jsonText);
+    const article = await callDeepSeek(userPrompt);
+    
+    // 只返回文章，不做完型填空
     return {
       success: true,
-      article,
-      options: toResultOptions(options),
-      optionsDetail: toResultOptionsDetail(optionsDetail),
-      annotations,
+      article: article.trim(),
+      options: {}, // 空对象
+      optionsDetail: undefined,
+      annotations: undefined,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : "生成失败，请稍后重试。";
